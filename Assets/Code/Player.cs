@@ -28,12 +28,21 @@ public class Player : MonoBehaviour, IMove, IHeal
 
         _transform.RotateAround(new Vector3(0f, 1f, 0f), Time.deltaTime * 10);
 
-#if UNITY_ANDROID
-        //touch = Input.GetTouch(0);
-        //    if (touch.tapCount>0)
-        //    Debug.Log("Touch");
+        #if UNITY_ANDROID
+                //touch = Input.GetTouch(0);
+                //    if (touch.tapCount>0)
+                //    Debug.Log("Touch");
             
-#endif
+        #endif
+    }
+
+    public void MoveClickMouse()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+
+        }
     }
 }
+
 
