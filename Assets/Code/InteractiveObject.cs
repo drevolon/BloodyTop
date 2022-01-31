@@ -18,7 +18,7 @@ public abstract class InteractiveObject: MonoBehaviour, IInteractable
         }
 
         //Interaction();
-        Destroy(gameObject);
+        Destroy(gameObject, 0.5f);
     }
 
     private void Start()
@@ -30,7 +30,7 @@ public abstract class InteractiveObject: MonoBehaviour, IInteractable
     {
         if (TryGetComponent(out Renderer renderer))
         {
-            renderer.material.color = Color.black;
+            //renderer.material.color = Color.black;
         }
     }
 

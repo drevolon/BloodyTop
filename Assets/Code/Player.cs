@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour, IMove, IHeal
 {
     public int HP { get; set; } = 10;
-    public float Speed { get; set; } = 5f;
+    public float Speed { get; set; } = 6f;
 
     protected Rigidbody _rigidbody;
     protected Transform _transform;
