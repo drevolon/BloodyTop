@@ -5,10 +5,18 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     private InteractiveObject[] _interactiveObjects;
+    [SerializeField]
+    private Car _car;
+    Vector3 beginStart;
 
     private void Awake()
     {
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
+
+        //car = new Car(GameObject obj);
+        beginStart = _car.GetComponent<Transform>().position;
+
+        //car = new Car(2f, beginStart);
     }
 
     private void Update()
@@ -22,18 +30,29 @@ public class GameController : MonoBehaviour
 
             if (interactiveObject is DestructibleObjects dObject)
             {
-                //Debug.Log(nameof(dObject));
-                //Debug.Log(typeof(DestructibleObjects));
             }
                
             
             if (interactiveObject is BoosterObject bObject)
             {
-                //Debug.Log(nameof(bObject));
-                //Debug.Log(typeof(BoosterObject));
             }
 
+            if (interactiveObject is Car cObject)
+            {
+                cObject.Move();
+
+                if (cObject.transform.position.x < -16f)
+                {
+                    cObject.DestroyCar();
+                    GenerationObj(cObject);
+                }
+            }
 
         }
+    }
+
+    void GenerationObj(Car car)
+    {
+        Instantiate(_car, beginStart, Quaternion.identity);
     }
 }

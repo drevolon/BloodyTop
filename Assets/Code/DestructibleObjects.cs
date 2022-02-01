@@ -12,6 +12,6 @@ public class DestructibleObjects : InteractiveObject
     }
     public override void Interaction()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

@@ -6,6 +6,6 @@ public class BoosterObject : InteractiveObject
 {
     public override void Interaction()
     {
-        throw new System.NotImplementedException();
+        
     }
 }
