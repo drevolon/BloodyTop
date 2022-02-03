@@ -10,33 +10,42 @@ public class Player : MonoBehaviour, IMove, IHeal
     protected Rigidbody _rigidbody;
     protected Transform _transform;
     Touch touch;
-    protected Vector3 vectorMove = new Vector3(1f, 0, -1f) * 10f;
-    protected float CurrentOmega = 80f;
+    protected float CurrentOmega = 5f;
+    protected float StartOmega = 5f;
+    protected float StartForce = 20f;
+    protected Vector3 vectorMove = new Vector3(1f, 0, -1f);
+    protected float StartVelocity=0f;
+    protected float LimitOmega = 0.3f;
+    bool f = false;
 
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
-        //_rigidbody.AddForce(vectorMove);
-        //_rigidbody.AddTorque(new Vector3(0f, 1f, 0f) * 50050f, ForceMode.Impulse);
-    }
+        CurrentOmega = StartOmega;
+    // _rigidbody.AddForce(vectorMove, ForceMode.Impulse);
+    //_rigidbody.AddTorque(new Vector3(0f, 1f, 0f) * 50050f, ForceMode.Impulse);
+}
     public void Move()
     {
 
         // Отлавливаем нажатие мыши
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            float ModulV = vectorMove.magnitude;
+            float ModulV = StartForce; // _rigidbody.velocity.magnitude;
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit Po;
             if (Physics.Raycast(ray, out Po))
             {
                 Vector3 mousePos = new Vector3(Po.point.x, Po.point.y, Po.point.z);
-                vectorMove = mousePos - _transform.position;
+                Vector3 vectorMove = mousePos - _transform.position;
                 vectorMove.y = 0;
                 vectorMove = vectorMove.normalized * ModulV;
                 _rigidbody.AddForce(vectorMove, ForceMode.Impulse);
+                StartVelocity = _rigidbody.velocity.magnitude;
+                Debug.Log("START="+_rigidbody.velocity.magnitude.ToString());
+                f = true;
             }
 
         }
@@ -44,28 +53,39 @@ public class Player : MonoBehaviour, IMove, IHeal
         //if (ValueForce > 0) ValueForce -= 0.1f;
 
 
+        if (StartVelocity>0) CurrentOmega = _rigidbody.velocity.magnitude / StartVelocity;
 
-        // Ограничиваем прецессию 10 градусами по X и Z
-        Vector3 angles = _transform.rotation.eulerAngles;
-        float angleX = angles.x;
-        float signX = Mathf.Sign(angleX);
-        angleX = Mathf.Abs(angleX);
+        if (f) Debug.Log(CurrentOmega);
 
-        Debug.Log(angleX);
+        if (CurrentOmega > LimitOmega)
+        {
+            // Ограничиваем прецессию 10 градусами по X и Z
+            Vector3 angles = _transform.rotation.eulerAngles;
+            float angleX = angles.x;
+            float signX = Mathf.Sign(angleX);
+            angleX = Mathf.Abs(angleX);
 
-        if (angleX > 350) { angleX = angleX - 350; signX = signX * (-1); }
-        float angleZ = angles.z;
-        float signZ = Mathf.Sign(angleZ);
-        angleZ = Mathf.Abs(angleZ);
-        if (angleZ > 350) { angleZ = angleZ - 350; signZ = signZ * (-1); }
+            if (angleX > 350) { angleX = angleX - 350; signX = signX * (-1); }
+            float angleZ = angles.z;
+            float signZ = Mathf.Sign(angleZ);
+            angleZ = Mathf.Abs(angleZ);
+            if (angleZ > 350) { angleZ = angleZ - 350; signZ = signZ * (-1); }
+     
 
-        Debug.Log(angleZ);
+        if (angleX > 5) angleX = 5;
+        if (angleZ > 5) angleZ = 5;
 
-        if (angleX > 10) angleX = 0 * signX;
-        if (angleZ > 10) angleZ = 0 * signZ;
-        angles = new Vector3(angleX, angles.y, angleZ);
+        angleX = angleX - angleX * 0.1f;
+        if (angleX < 0) angleX = 0;
+
+        angleZ = angleZ - angleZ * 0.1f;
+        if (angleZ < 0) angleZ = 0;
+
+
+        angles = new Vector3(angleX*signX, angles.y, angleZ*signZ);
 
         _transform.rotation = Quaternion.Euler(angles);
+        }
 
 
         // Вращаем
