@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Car : InteractiveObject, IMove
 {
-    public float Speed { get; set; } = 2f;
-    Transform transform;
+    public float Speed { get; set;}
+    private Transform transform;
 
-    //public Car(float speed, Transform transform)
-    //{
-    //    //Speed = speed;
-    //    //this.transform = transform;
-    //}
+    public Car(float speed, Transform transform)
+    {
+        Speed = speed;
+        this.transform = transform;
+    }
 
     public void Move()
     {
@@ -20,7 +20,7 @@ public class Car : InteractiveObject, IMove
 
     void Start()
     {
-        transform = GetComponent<Transform>();
+        //transform = GetComponent<Transform>();
     }
 
     void Update()
