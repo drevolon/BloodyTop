@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    private InteractiveObject[] _interactiveObjects;
     [SerializeField]
+    Transform spawnPoint;
+    [SerializeField]
+    GameObject gameObjectCar;
+
+    private InteractiveObject[] _interactiveObjects;
+  
     private Car _car;
     Vector3 beginStart;
+    
+    
 
     private void Awake()
     {
-        _interactiveObjects = FindObjectsOfType<InteractiveObject>();
+        
 
         //car = new Car(GameObject obj);
-        beginStart = _car.GetComponent<Transform>().position;
+        //beginStart = gameObjectCar.GetComponent<Transform>().position;
 
-        //car = new Car(2f, beginStart);
+        _car = new Car(2f, spawnPoint);
+
+       // GenerationObj(gameObjectCar);
+        
+        _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
 
     private void Update()
@@ -39,20 +50,22 @@ public class GameController : MonoBehaviour
 
             if (interactiveObject is Car cObject)
             {
+                //Debug.Log("MoveCar");
                 cObject.Move();
 
                 if (cObject.transform.position.x < -16f)
                 {
                     cObject.DestroyCar();
-                    GenerationObj(cObject);
+                  //  GenerationObj(gameObjectCar);
+                   // _interactiveObjects = FindObjectsOfType<InteractiveObject>();
                 }
             }
 
         }
     }
 
-    void GenerationObj(Car car)
+    void GenerationObj(GameObject car)
     {
-        Instantiate(_car, beginStart, Quaternion.identity);
+        Instantiate(_car, spawnPoint.position, Quaternion.identity);
     }
 }
