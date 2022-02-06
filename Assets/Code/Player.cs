@@ -45,8 +45,6 @@ public class Player : MonoBehaviour, IMove, IHeal
             float newPosx = pos.x * Mathf.Cos(-angleChangeVelocity) - pos.z * Mathf.Sin(-angleChangeVelocity);
             float newPosz = pos.x * Mathf.Sin(-angleChangeVelocity) + pos.z * Mathf.Cos(-angleChangeVelocity);
 
-            Debug.Log(newPosx.ToString() + " " + newPosz.ToString());
-
             childPoint.localPosition = new Vector3(newPosx, pos.y, newPosz);
         }
 
