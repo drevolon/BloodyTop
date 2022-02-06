@@ -53,4 +53,14 @@ public class RagDollAnim : MonoBehaviour
             collider.enabled = !isActive;
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("OnCollisionEnter");
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        Debug.Log("OnCollisionExit");
+    }
 }
