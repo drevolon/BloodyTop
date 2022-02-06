@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IMove, IHeal
 
     public float StartVelocity = 50f; // Начальная скорость движения
     public float deltaVelocity = 0.05f; // скорость убывания движения
+    public GameObject path;
     protected float CurrentVelocity;
 
     protected float LimitOmega = 0.1f; // Обороты, при меньшем значении волчок падает
@@ -32,6 +33,24 @@ public class Player : MonoBehaviour, IMove, IHeal
         _transform = GetComponent<Transform>();
         _line = GetComponent<LineRenderer>();
         CurrentOmega = StartOmega;
+
+
+
+        for (int nPoint = 1; nPoint < 20; nPoint++)
+        {
+            Transform childPoint = path.transform.GetChild(nPoint);
+            float angleChangeVelocity = StartOmega * Time.deltaTime * nPoint *Mathf.Deg2Rad;
+
+            Vector3 pos = childPoint.localPosition;
+            float newPosx = pos.x * Mathf.Cos(-angleChangeVelocity) - pos.z * Mathf.Sin(-angleChangeVelocity);
+            float newPosz = pos.x * Mathf.Sin(-angleChangeVelocity) + pos.z * Mathf.Cos(-angleChangeVelocity);
+
+            Debug.Log(newPosx.ToString() + " " + newPosz.ToString());
+
+            childPoint.localPosition = new Vector3(newPosx, pos.y, newPosz);
+        }
+
+
     }
     public void Move()
     {
@@ -52,8 +71,15 @@ public class Player : MonoBehaviour, IMove, IHeal
             if (_transform.position.y>0.2f)
             _transform.position = new Vector3(_transform.position.x, 0.2f, _transform.position.z);
 
+            // Изменим частоту вращения
+            //float angleChangeVelocity = CurrentOmega - StartOmega * CurrentVelocity / StartVelocity;
+            float angleChangeVelocity = CurrentOmega * Mathf.Deg2Rad * Time.deltaTime;
+            CurrentOmega = StartOmega * CurrentVelocity / StartVelocity;
 
-            Vector3 VelocityDirection = new Vector3(_rigidbody.velocity.x,0f, _rigidbody.velocity.z).normalized * CurrentVelocity;
+            float dx = _rigidbody.velocity.x * Mathf.Cos(angleChangeVelocity) + _rigidbody.velocity.z * Mathf.Sin(angleChangeVelocity);
+            float dz = (-1)*_rigidbody.velocity.x * Mathf.Sin(angleChangeVelocity) + _rigidbody.velocity.z * Mathf.Cos(angleChangeVelocity);
+
+            Vector3 VelocityDirection = new Vector3(_rigidbody.velocity.x + dx, 0f, _rigidbody.velocity.z + dz).normalized * CurrentVelocity;
             _rigidbody.velocity = VelocityDirection;
 
             // отлавливаем тап
@@ -87,8 +113,6 @@ public class Player : MonoBehaviour, IMove, IHeal
                 }
 
             }
-            // Изменим частоту вращения
-            CurrentOmega = StartOmega * CurrentVelocity / StartVelocity;
          //   Debug.Log(CurrentOmega.ToString()+" "+ CurrentVelocity.ToString());
         }
 
@@ -127,8 +151,10 @@ public class Player : MonoBehaviour, IMove, IHeal
         // Вращаем
         Vector3 VectorOS = new Vector3(0f, 1f, 0f);
 //        VectorOS = _transform.rotation * VectorOS;
-        _transform.RotateAround(VectorOS, CurrentOmega * Time.deltaTime);
-  
+        //_transform.RotateAround(VectorOS, CurrentOmega * Time.deltaTime);
+
+        _transform.Rotate(VectorOS, CurrentOmega);
+
         // Проверка запуска
         if (!isStart) CheckMouseDrag();
 
@@ -151,16 +177,39 @@ public class Player : MonoBehaviour, IMove, IHeal
 
             if (fingerDownPos != Vector2.zero)
             {
+                //fingerUpPos = Input.mousePosition;
+                //_line.positionCount = 2;
+                //Vector3[] PosArrow = new Vector3[2];
+                //PosArrow[0] = _transform.position;
+                //float dx = fingerUpPos.x - fingerDownPos.x;
+                //float dy = fingerUpPos.y - fingerDownPos.y;
+                //float dl = Mathf.Sqrt(dx * dx + dy * dy) / 25;
+
+                //_line.enabled = true;
+                //PosArrow[1] = new Vector3(_transform.position.x - dy/10, _transform.position.y, _transform.position.z + dx/10);
+                //_line.SetPositions(PosArrow);
+
+
                 fingerUpPos = Input.mousePosition;
-                _line.positionCount = 2;
-                Vector3[] PosArrow = new Vector3[2];
-                PosArrow[0] = _transform.position;
                 float dx = fingerUpPos.x - fingerDownPos.x;
                 float dy = fingerUpPos.y - fingerDownPos.y;
-                float dl = Mathf.Sqrt(dx * dx + dy * dy)/5;
-                _line.enabled = true;
-                PosArrow[1] = new Vector3(_transform.position.x - dy, _transform.position.y, _transform.position.z + dx);
-                _line.SetPositions(PosArrow);
+                float anglePath = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg - 180f;
+
+                float dl = Mathf.Sqrt(dx * dx + dy * dy)/10;
+                int countPoints = Mathf.RoundToInt(dl);
+
+                for (int nPoint =0;nPoint<20;nPoint++)
+                {
+                    path.transform.GetChild(nPoint).gameObject.SetActive(nPoint <= countPoints);
+                }
+
+                path.transform.position = _transform.position;
+                Vector3 to = new Vector3(0, anglePath, 0);
+
+                path.transform.eulerAngles = to;
+                //Vector3.Lerp(transform.rotation.eulerAngles, to, Time.deltaTime);
+
+                path.SetActive(true);
             }
         }
 
@@ -183,6 +232,9 @@ public class Player : MonoBehaviour, IMove, IHeal
                 fingerDownPos = Vector2.zero;
                 fingerUpPos = Vector2.zero;
                 _line.enabled = false;
+
+                path.SetActive(false);
+
             }
         }
     }
