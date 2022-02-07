@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class TouchClass : MonoBehaviour
+public class TouchClass  
 {
     public Vector2 startPos;
     public Vector2 direction;
@@ -14,8 +14,7 @@ public class TouchClass : MonoBehaviour
     protected float StartForce = 20f;
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody>();
-        _transform = GetComponent<Transform>();
+
     }
     void Update()
     {
