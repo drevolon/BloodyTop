@@ -9,6 +9,7 @@ public class RagDollAnim : MonoBehaviour
 
     [SerializeField] private Animator _animator;
     [SerializeField] private Vector3 _force;
+   
 
     private Rigidbody[] _rigidbodies;
     private Collider[] _colliders;
@@ -28,13 +29,15 @@ public class RagDollAnim : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Death();
-        }
+        //if (Input.GetKeyDown(KeyCode.X))
+        //{
+        //    Death();
+        //}
+        
+
     }
 
-    private void Death()
+    public void Death()
     {
         _animator.enabled = false;
         SetState(false);
@@ -63,4 +66,26 @@ public class RagDollAnim : MonoBehaviour
     {
         Debug.Log("OnCollisionExit");
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("OnTriggerEnter");
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log("OnTriggerExit");
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        Debug.Log("OnCollisionStay");
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        Debug.Log("OnTriggerStayEthon");
+    }
+
+    
 }
