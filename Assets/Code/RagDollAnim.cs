@@ -29,19 +29,19 @@ public class RagDollAnim : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.X))
-        //{
-        //    Death();
-        //}
-        
 
     }
 
     public void Death()
     {
-        _animator.enabled = false;
-        SetState(false);
-        _rigidbodies.First().AddForce(_force, ForceMode.Impulse);
+
+        if (gameObject != null && _animator!=null)
+        {
+            _animator.enabled = false;
+            SetState(false);
+            _rigidbodies.First().AddForce(_force, ForceMode.Impulse);
+            //Destroy(gameObject, 2f);
+        }
     }
 
     private void SetState(bool isActive)
@@ -57,35 +57,7 @@ public class RagDollAnim : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("OnCollisionEnter");
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        Debug.Log("OnCollisionExit");
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("OnTriggerEnter");
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        Debug.Log("OnTriggerExit");
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        Debug.Log("OnCollisionStay");
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        Debug.Log("OnTriggerStayEthon");
-    }
+    
 
     
 }

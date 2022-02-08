@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
     //RagDollAnim dollAnim;
 
     private InteractiveObject[] _interactiveObjects;
-    private RagDollAnim[] _dollAnim;
+    private List<RagDollAnim> _dollAnim;
 
     Car _car;
 
@@ -23,7 +23,15 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
 
-        _dollAnim = FindObjectsOfType<RagDollAnim>();
+        _dollAnim = new List<RagDollAnim>();
+
+        //_dollAnim=FindObjectsOfType<RagDollAnim>();
+
+        foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
+        {
+            _dollAnim.Add(dollItem);
+        }
+
         //car = new Car(GameObject obj);
         //beginStart = gameObjectCar.GetComponent<Transform>().position;
 
@@ -53,19 +61,27 @@ public class GameController : MonoBehaviour
 
                     Destroy(dObject.gameObject,1f);
 
-                    for (int x = 0; x < _dollAnim.Length; x++)
+
+                    foreach (var dollItem in _dollAnim)
                     {
-                        var dollAnim = _dollAnim[x];
-                        if (dollAnim is RagDollAnim dollObject)
+                        if (dollItem is RagDollAnim dollObject)
                         {
                             dollObject.Death();
+                            
                         }
+                       // _dollAnim.Remove(dollItem);
                     }
 
-                    //if (_dollAnim is RagDollAnim dollObject)
+                    //for (int x = 0; x < _dollAnim.Length; x++)
                     //{
-                    //    dollObject.Death();
+                    //    var dollAnim = _dollAnim[x];
+                    //    if (dollAnim is RagDollAnim dollObject)
+                    //    {
+                    //        dollObject.Death();
+                    //    }
                     //}
+
+
                 }
             }
 
