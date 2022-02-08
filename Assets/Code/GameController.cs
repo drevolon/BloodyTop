@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
 
         _dollAnim = new List<RagDollAnim>();
 
-        //_dollAnim=FindObjectsOfType<RagDollAnim>();
+
 
         foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
         {
@@ -55,11 +55,11 @@ public class GameController : MonoBehaviour
 
             if (interactiveObject is DestructibleObjects dObject)
             {
-                if (dObject.GetComponent<Rigidbody>().velocity.y<-1)
+                if (dObject.GetComponent<Rigidbody>().velocity.y < -1)
                 {
                     //Debug.Log($"Падает объект {dObject.name} V {dObject.GetComponent<Rigidbody>().velocity.y}");
 
-                    Destroy(dObject.gameObject,1f);
+                    Destroy(dObject.gameObject, 2f);
 
 
                     foreach (var dollItem in _dollAnim)
@@ -67,20 +67,17 @@ public class GameController : MonoBehaviour
                         if (dollItem is RagDollAnim dollObject)
                         {
                             dollObject.Death();
-                            
                         }
-                       // _dollAnim.Remove(dollItem);
+
                     }
-
-                    //for (int x = 0; x < _dollAnim.Length; x++)
-                    //{
-                    //    var dollAnim = _dollAnim[x];
-                    //    if (dollAnim is RagDollAnim dollObject)
-                    //    {
-                    //        dollObject.Death();
-                    //    }
-                    //}
-
+                    foreach (var dollItem in _dollAnim)
+                    {
+                        if (dollItem is RagDollAnim dollObject)
+                        {
+                            dollObject.DestroyObject();
+                        }
+                    }
+                    _dollAnim.Clear();
 
                 }
             }
@@ -88,6 +85,7 @@ public class GameController : MonoBehaviour
 
             if (interactiveObject is BoosterObject bObject)
             {
+                bObject.Flay();
             }
 
             if (interactiveObject is Car cObject)
@@ -105,6 +103,8 @@ public class GameController : MonoBehaviour
 
         }
     }
+
+     
 
     void GenerationObj(GameObject car)
     {

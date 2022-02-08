@@ -40,8 +40,13 @@ public class RagDollAnim : MonoBehaviour
             _animator.enabled = false;
             SetState(false);
             _rigidbodies.First().AddForce(_force, ForceMode.Impulse);
-            //Destroy(gameObject, 2f);
+            
         }
+    }
+
+    public void DestroyObject()
+    {
+        Destroy(gameObject, 2f);
     }
 
     private void SetState(bool isActive)
