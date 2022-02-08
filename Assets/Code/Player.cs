@@ -311,7 +311,20 @@ public class Player : MonoBehaviour, IMove, IHeal
         //                path.SetActive(false);
 
     }
-    
+
+    protected void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag=="UpSpeed")
+        {
+            CurrentVelocity += StartVelocity * 0.1f;
+            //Debug.Log("Increase Speed");
+        }
+        if (other.gameObject.tag == "DownSpeed")
+        {
+            CurrentVelocity -= StartVelocity * 0.1f;
+            //Debug.Log("Decrease Speed");
+        }
+    }
 
 }
 
