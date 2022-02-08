@@ -14,4 +14,9 @@ public class DestructibleObjects : InteractiveObject
     {
         
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        //Debug.Log($"OnTriggerExitDestructObject {other.name}");
+    }
 }

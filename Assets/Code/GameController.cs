@@ -8,30 +8,36 @@ public class GameController : MonoBehaviour
     Transform spawnPoint;
     [SerializeField]
     GameObject gameObjectCar;
+    
+    //RagDollAnim dollAnim;
 
     private InteractiveObject[] _interactiveObjects;
-  
-    private Car _car;
+    private RagDollAnim[] _dollAnim;
+
+    Car _car;
+
     Vector3 beginStart;
-    
-    
+
+
 
     private void Awake()
     {
-        
 
+        _dollAnim = FindObjectsOfType<RagDollAnim>();
         //car = new Car(GameObject obj);
         //beginStart = gameObjectCar.GetComponent<Transform>().position;
 
         _car = new Car(2f, spawnPoint);
 
-       // GenerationObj(gameObjectCar);
-        
+        // GenerationObj(gameObjectCar);
+
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
 
     private void Update()
     {
+       
+
         for (int i = 0; i < _interactiveObjects.Length; i++)
         {
             var interactiveObject = _interactiveObjects[i];
@@ -41,9 +47,29 @@ public class GameController : MonoBehaviour
 
             if (interactiveObject is DestructibleObjects dObject)
             {
+                if (dObject.GetComponent<Rigidbody>().velocity.y<-1)
+                {
+                    //Debug.Log($"Падает объект {dObject.name} V {dObject.GetComponent<Rigidbody>().velocity.y}");
+
+                    Destroy(dObject.gameObject,1f);
+
+                    for (int x = 0; x < _dollAnim.Length; x++)
+                    {
+                        var dollAnim = _dollAnim[x];
+                        if (dollAnim is RagDollAnim dollObject)
+                        {
+                            dollObject.Death();
+                        }
+                    }
+
+                    //if (_dollAnim is RagDollAnim dollObject)
+                    //{
+                    //    dollObject.Death();
+                    //}
+                }
             }
-               
-            
+
+
             if (interactiveObject is BoosterObject bObject)
             {
             }
@@ -56,8 +82,8 @@ public class GameController : MonoBehaviour
                 if (cObject.transform.position.x < -16f)
                 {
                     cObject.DestroyCar();
-                  //  GenerationObj(gameObjectCar);
-                   // _interactiveObjects = FindObjectsOfType<InteractiveObject>();
+                    //  GenerationObj(gameObjectCar);
+                    // _interactiveObjects = FindObjectsOfType<InteractiveObject>();
                 }
             }
 
