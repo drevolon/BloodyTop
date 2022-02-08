@@ -8,26 +8,28 @@ public class Player : MonoBehaviour, IMove, IHeal
     public int HP { get; set; } = 10;
     public float Speed { get; set; } = 6f;
 
-    protected Rigidbody _rigidbody;
-    protected Transform _transform;
-    private Vector2 fingerDownPos = Vector2.zero;
-    private Vector2 fingerUpPos = Vector2.zero;
-    protected LineRenderer _line;
-
-    protected float CurrentOmega = 5f;// текущая скорость вращения
     public float StartOmega = 5f; // Начальная скорость вращения
-    protected float StartForce = 100f; // Начальная сила 
-
+    public GameObject LineTarget; // Объект с LineRendere, который рисует траекторию движения
     public float StartVelocity = 50f; // Начальная скорость движения
     public float deltaVelocity = 0.05f; // скорость убывания движения
-    public GameObject path;
-    public GameObject LineTarget;
-    protected float CurrentVelocity;
+    public float deltaBoosterVelocity = 0.5f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
 
-    protected float LimitOmega = 0.1f; // Обороты, при меньшем значении волчок падает
-    protected float maxAngleY = 5f; // Макс отклонение от вертикальной оси при вращении
+    protected Rigidbody _rigidbody;
+    protected Transform _transform; 
+    private Vector2 fingerDownPos = Vector2.zero; // Точка экрана, где была нажата кнпка мыши или touch
+    private Vector2 fingerUpPos = Vector2.zero; // Точка экрана, где была отжата кнпка мыши или touch
+    protected LineRenderer _line; // LineRenderer для траектории движения
+
+    protected float CurrentOmega = 5f;// текущая скорость вращения
+    protected float StartForce = 100f; // Начальная сила 
+
+    //public GameObject path; // Объект, рисующий траекторию (устарело)
+    protected float CurrentVelocity; // Текущая линейная скорость волчка
+
+    protected float LimitOmega = 0.1f; // Обороты, при меньшем значении снимается ограничение на отклонение от оси Y
+    protected float maxAngleY = 5f; // Макс отклонение от вертикальной оси при вращении до достижении скорости вращения LimitOmega
     protected bool isStart = false; // Флаг о произведенном запуске
-    protected Vector3[] TraceTarget = new Vector3[20];
+    protected Vector3[] TraceTarget = new Vector3[20]; // Массив, хранящий первоначальную траектрию
 
 
     private void Start()
@@ -316,13 +318,13 @@ public class Player : MonoBehaviour, IMove, IHeal
     {
         if (other.gameObject.tag=="UpSpeed")
         {
-            CurrentVelocity += StartVelocity * 0.1f;
+            CurrentVelocity = CurrentVelocity *(1+deltaBoosterVelocity);
             //Debug.Log("Increase Speed");
         }
         if (other.gameObject.tag == "DownSpeed")
         {
-            CurrentVelocity -= StartVelocity * 0.1f;
-            //Debug.Log("Decrease Speed");
+            CurrentVelocity = CurrentVelocity * (1-deltaBoosterVelocity);
+           // Debug.Log("Decrease Speed");
         }
     }
 
