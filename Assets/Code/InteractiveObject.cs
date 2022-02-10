@@ -18,7 +18,7 @@ public abstract class InteractiveObject: MonoBehaviour, IInteractable
         }
 
         //Interaction();
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 2f);
     }
 
     private void Start()

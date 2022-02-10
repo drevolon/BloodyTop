@@ -25,7 +25,11 @@ public class GameController : MonoBehaviour
 
         _dollAnim = new List<RagDollAnim>();
 
+        
 
+        GenerationObj();
+
+        _car = FindObjectOfType<Car>();
 
         foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
         {
@@ -35,9 +39,9 @@ public class GameController : MonoBehaviour
         //car = new Car(GameObject obj);
         //beginStart = gameObjectCar.GetComponent<Transform>().position;
 
-        _car = new Car(2f, spawnPoint);
+       // _car = new Car(2f, spawnPoint);
 
-        // GenerationObj(gameObjectCar);
+        
 
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
@@ -88,26 +92,29 @@ public class GameController : MonoBehaviour
                 bObject.Flay();
             }
 
-            if (interactiveObject is Car cObject)
-            {
-                //Debug.Log("MoveCar");
-                cObject.Move();
-
-                if (cObject.transform.position.x < -16f)
-                {
-                    cObject.DestroyCar();
-                    //  GenerationObj(gameObjectCar);
-                    // _interactiveObjects = FindObjectsOfType<InteractiveObject>();
-                }
-            }
+            
 
         }
+
+
+
+        if (_car.transform.position.x < -16f)
+        {
+            _car.DestroyCar();
+            GenerationObj();
+            _car = FindObjectOfType<Car>();
+        }
+        else
+        {
+            _car.Move();
+        }
+
     }
 
      
 
-    void GenerationObj(GameObject car)
+    void GenerationObj()
     {
-        Instantiate(_car, spawnPoint.position, Quaternion.identity);
+        Instantiate(gameObjectCar, spawnPoint.position, Quaternion.identity);
     }
 }

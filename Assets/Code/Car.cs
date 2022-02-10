@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class Car : InteractiveObject, IMove
 {
-    public float Speed { get; set;}
-    private Transform transform;
+    public float Speed { get; set; } = 3f;
+    private Transform _transformSpawnPos;
+    private Transform transformCar;
 
-    public Car(float speed, Transform transform)
+    //public Car(float speed, Transform transformSpawnPos)
+    //{
+    //    Speed = speed;
+    //    _transformSpawnPos = transformSpawnPos;
+    //}
+
+    private void Awake()
     {
-        Speed = speed;
-        this.transform = transform;
+        transformCar = GetComponent<Transform>();
     }
 
     public void Move()
     {
-        transform.Translate(new Vector3(-Speed*Time.deltaTime, 0f, 0f));
+        transformCar.Translate(new Vector3(-Speed*Time.deltaTime, 0f, 0f));
     }
 
     void Start()
@@ -25,8 +31,8 @@ public class Car : InteractiveObject, IMove
 
     void Update()
     {
-
-       
+       // Debug.Log("Move Car");
+        //Move();
     }
     public void DestroyCar()
     {
