@@ -97,16 +97,21 @@ public class GameController : MonoBehaviour
         }
 
 
-
-        if (_car.transform.position.x < -16f)
+        if (_car != null)
         {
-            _car.DestroyCar();
-            GenerationObj();
-            _car = FindObjectOfType<Car>();
+            if (_car.transform.position.x < -16f)
+            {
+                _car.DestroyCar();
+                GenerationObj();
+            }
+            else
+            {
+                _car.Move();
+            }
         }
         else
         {
-            _car.Move();
+            GenerationObj();
         }
 
     }
@@ -115,6 +120,7 @@ public class GameController : MonoBehaviour
 
     void GenerationObj()
     {
+        _car = FindObjectOfType<Car>();
         Instantiate(gameObjectCar, spawnPoint.position, Quaternion.identity);
     }
 }
