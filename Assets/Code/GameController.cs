@@ -106,12 +106,13 @@ public class GameController : MonoBehaviour
             }
             else
             {
+                Debug.Log("_car.Move()");
                 _car.Move();
             }
         }
         else
         {
-            GenerationObj();
+           // GenerationObj();
         }
 
     }
