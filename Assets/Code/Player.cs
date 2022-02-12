@@ -24,11 +24,11 @@ public class Player : MonoBehaviour, IMove, IHeal
     protected float StartForce = 100f; // Начальная сила 
 
     //public GameObject path; // Объект, рисующий траекторию (устарело)
-    protected float CurrentVelocity; // Текущая линейная скорость волчка
+    public float CurrentVelocity; // Текущая линейная скорость волчка
 
     protected float LimitOmega = 0.1f; // Обороты, при меньшем значении снимается ограничение на отклонение от оси Y
     protected float maxAngleY = 5f; // Макс отклонение от вертикальной оси при вращении до достижении скорости вращения LimitOmega
-    protected bool isStart = false; // Флаг о произведенном запуске
+    public bool isStart = false; // Флаг о произведенном запуске
     protected Vector3[] TraceTarget = new Vector3[20]; // Массив, хранящий первоначальную траектрию
 
 
@@ -54,6 +54,7 @@ public class Player : MonoBehaviour, IMove, IHeal
 
         // LineRenderer у отдельного объекта
         _line = LineTarget.GetComponent<LineRenderer>();
+
         for (int nPoint = 0; nPoint < 20; nPoint++)
         {
             Vector3 pos = new Vector3(nPoint + 1f, 0f, 0f);
@@ -63,12 +64,18 @@ public class Player : MonoBehaviour, IMove, IHeal
             TraceTarget[nPoint] = new Vector3(newPosx, pos.y, newPosz);
         }
 
+        UIDetector.instance.OnBloodyTopStart += OnStartBloodyTop;
+        UIDetector.instance.OnBloodyTopTargeting += OnUpdateTraceLine;
+
+        UIDetector.instance.OnBloodyTopLeft += OnChangeVelocityLeft;
+        UIDetector.instance.OnBloodyTopRight += OnChangeVelocityRight;
+        UIDetector.instance.OnEndCorrectDirection += OnEndCorrectDirection;
 
     }
     public void Move()
     {
 
-        // Отлавливаем нажатие мыши и палец
+       
         if (isStart)
         {
 
@@ -81,8 +88,8 @@ public class Player : MonoBehaviour, IMove, IHeal
             }
 
             // нехрен летать, приземляем на площадку
-            if (_transform.position.y>0.2f)
-            _transform.position = new Vector3(_transform.position.x, 0.2f, _transform.position.z);
+            if (_transform.position.y > 0.2f)
+                _transform.position = new Vector3(_transform.position.x, 0.2f, _transform.position.z);
 
             // Изменим частоту вращения
             //float angleChangeVelocity = CurrentOmega - StartOmega * CurrentVelocity / StartVelocity;
@@ -90,44 +97,44 @@ public class Player : MonoBehaviour, IMove, IHeal
             CurrentOmega = StartOmega * CurrentVelocity / StartVelocity;
 
             float dx = _rigidbody.velocity.x * Mathf.Cos(angleChangeVelocity) + _rigidbody.velocity.z * Mathf.Sin(angleChangeVelocity);
-            float dz = (-1)*_rigidbody.velocity.x * Mathf.Sin(angleChangeVelocity) + _rigidbody.velocity.z * Mathf.Cos(angleChangeVelocity);
+            float dz = (-1) * _rigidbody.velocity.x * Mathf.Sin(angleChangeVelocity) + _rigidbody.velocity.z * Mathf.Cos(angleChangeVelocity);
 
 
             Vector3 VelocityDirection = new Vector3(_rigidbody.velocity.x + dx, 0f, _rigidbody.velocity.z + dz).normalized * CurrentVelocity;
             _rigidbody.velocity = VelocityDirection;
 
-            // отлавливаем тап
-            if (Input.GetMouseButton(0) || (Input.touchCount > 0))
-            {
-                Vector3 InputPosition;
-                if (Input.GetMouseButton(0))
-                {
-                    InputPosition = Input.mousePosition;
-                }
-                if (Input.touchCount > 0)
-                {
-                    InputPosition = Input.GetTouch(0).position;
-                }
+            //// отлавливаем тап
+            //if (Input.GetMouseButton(0) || (Input.touchCount > 0))
+            //{
+            //    Vector3 InputPosition;
+            //    if (Input.GetMouseButton(0))
+            //    {
+            //        InputPosition = Input.mousePosition;
+            //    }
+            //    if (Input.touchCount > 0)
+            //    {
+            //        InputPosition = Input.GetTouch(0).position;
+            //    }
 
-                float ModulV = _rigidbody.velocity.magnitude;
+            //    float ModulV = _rigidbody.velocity.magnitude;
 
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit Po;
-                if (Physics.Raycast(ray, out Po))
-                {
-                    Vector3 mousePos = new Vector3(Po.point.x, Po.point.y, Po.point.z);
-                    Vector3 vectorMove = mousePos - _transform.position;
-                    vectorMove.y = 0;
-                    vectorMove = vectorMove.normalized * ModulV;
+            //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //    RaycastHit Po;
+            //    if (Physics.Raycast(ray, out Po))
+            //    {
+            //        Vector3 mousePos = new Vector3(Po.point.x, Po.point.y, Po.point.z);
+            //        Vector3 vectorMove = mousePos - _transform.position;
+            //        vectorMove.y = 0;
+            //        vectorMove = vectorMove.normalized * ModulV;
 
-                    _rigidbody.velocity = vectorMove;
+            //        _rigidbody.velocity = vectorMove;
 
-//                    _rigidbody.AddForce(vectorMove, ForceMode.Impulse);
-                  
-                }
+            //        //                    _rigidbody.AddForce(vectorMove, ForceMode.Impulse);
 
-            }
-         //   Debug.Log(CurrentOmega.ToString()+" "+ CurrentVelocity.ToString());
+            //    }
+
+            //}
+            //   Debug.Log(CurrentOmega.ToString()+" "+ CurrentVelocity.ToString());
         }
 
 
@@ -164,78 +171,39 @@ public class Player : MonoBehaviour, IMove, IHeal
 
         // Вращаем
         Vector3 VectorOS = new Vector3(0f, 1f, 0f);
-//        VectorOS = _transform.rotation * VectorOS;
+        //        VectorOS = _transform.rotation * VectorOS;
         //_transform.RotateAround(VectorOS, CurrentOmega * Time.deltaTime);
 
         _transform.Rotate(VectorOS, CurrentOmega);
 
-        // Проверка запуска
-        if (!isStart)
-        {
-            CheckMouseDrag();
-            CheckTouch();
-        }
+        _line.gameObject.transform.position = new Vector3(_transform.position.x, _line.gameObject.transform.position.y, _transform.position.z);
 
     }
 
-    private void CheckMouseDrag()
+    protected void OnStartBloodyTop(Vector3 fingerDownPos, Vector3 fingerUpPos)
     {
+        //fingerUpPos = InputPosition;
+        float dx = fingerUpPos.x - fingerDownPos.x;
+        float dy = fingerUpPos.y - fingerDownPos.y;
+        Vector3 vectorMove = new Vector3(_transform.position.x - dy, 0, _transform.position.z + dx);
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (fingerDownPos == Vector2.zero)
-            {
-                fingerDownPos = Input.mousePosition;
-                fingerUpPos = Vector2.zero;
-            }
-        }
+        vectorMove = vectorMove.normalized * StartVelocity;
+        CurrentVelocity = StartVelocity;
 
-        if ((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0))
-        {
+        _rigidbody.velocity = vectorMove;
+        //_rigidbody.AddForce(vectorMove, ForceMode.Impulse);
 
-            if (fingerDownPos != Vector2.zero)
-            {
-                UpdateTraceLine(Input.mousePosition);
-            }
-        }
+        isStart = true;
+        fingerDownPos = Vector2.zero;
+        fingerUpPos = Vector2.zero;
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            if (fingerDownPos != Vector2.zero)
-            {
-                StartBloodyTop(Input.mousePosition);
-            }
-        }
+        
+        _line.enabled = false;
+        //                path.SetActive(false);
+
     }
 
-    protected void CheckTouch()
-    {
-        foreach (Touch touch in Input.touches)
-        {
-            if (touch.phase == TouchPhase.Began)
-            {
-                fingerDownPos = touch.position;
-                fingerUpPos = Vector3.zero; 
-            }
-
-            if (touch.phase == TouchPhase.Moved)
-            {
-                if (fingerDownPos != Vector2.zero)
-                {
-                    UpdateTraceLine(touch.position);
-                }
-            }
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-                if (fingerDownPos != Vector2.zero)
-                {
-                    StartBloodyTop(touch.position);
-                }
-            }
-        }
-    }
-    protected void UpdateTraceLine(Vector3 InputPosition)
+    protected void OnUpdateTraceLine(Vector3 fingerDownPos, Vector3 fingerUpPos)
     {
         //fingerUpPos = Input.mousePosition;
         //_line.positionCount = 2;
@@ -271,7 +239,6 @@ public class Player : MonoBehaviour, IMove, IHeal
         //path.SetActive(true);
 
         // Прицел с использованием LineRenderer
-        fingerUpPos = InputPosition;
         float dx = fingerUpPos.x - fingerDownPos.x;
         float dy = fingerUpPos.y - fingerDownPos.y;
         float anglePath = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg - 180f;
@@ -291,27 +258,33 @@ public class Player : MonoBehaviour, IMove, IHeal
         LineTarget.transform.eulerAngles = to;
 
     }
-    protected void StartBloodyTop(Vector3 InputPosition)
+
+    private void OnChangeVelocityRight()
     {
-        fingerUpPos = InputPosition;
-        float dx = fingerUpPos.x - fingerDownPos.x;
-        float dy = fingerUpPos.y - fingerDownPos.y;
-        Vector3 vectorMove = new Vector3(_transform.position.x - dy, 0, _transform.position.z + dx);
+        Vector3 Vpos = Quaternion.Euler(new Vector3(0f, Camera.main.transform.rotation.eulerAngles.y, 0f)) * (new Vector3(10f, 0f, 0f));
+        ChangeVectorVelocity(Vpos);
+        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, 10f, 0f)) * _rigidbody.velocity;
+    }
+    private void OnChangeVelocityLeft()
+    {
+        Vector3 Vpos = Quaternion.Euler(new Vector3(0f, Camera.main.transform.rotation.eulerAngles.y, 0f)) * (new Vector3(-10f, 0f, 0f));
+        ChangeVectorVelocity(Vpos);
+        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, -10f, 0f)) * _rigidbody.velocity;
+    }
+    private void ChangeVectorVelocity(Vector3 ArrowDirection)
+    {
+        Vector3[] LinePnts = new Vector3[2];
+        LinePnts[0] = Vector3.zero;
+        LinePnts[1] = ArrowDirection;
+        _line.gameObject.transform.eulerAngles = Vector3.zero;
+        _line.positionCount = 2;
+        _line.SetPositions(LinePnts);
+        _line.enabled = true;
 
-        vectorMove = vectorMove.normalized * StartVelocity;
-        CurrentVelocity = StartVelocity;
-
-        _rigidbody.velocity = vectorMove;
-        //_rigidbody.AddForce(vectorMove, ForceMode.Impulse);
-
-        isStart = true;
-        fingerDownPos = Vector2.zero;
-        fingerUpPos = Vector2.zero;
-
-
+    }
+    private void OnEndCorrectDirection()
+    {
         _line.enabled = false;
-        //                path.SetActive(false);
-
     }
 
     protected void OnTriggerExit(Collider other)
