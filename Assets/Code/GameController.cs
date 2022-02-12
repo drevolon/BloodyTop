@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour
     private InteractiveObject[] _interactiveObjects;
     private List<RagDollAnim> _dollAnim;
 
-    Car _car;
+    private List<Car> _car;
 
     Vector3 beginStart;
 
@@ -25,23 +25,16 @@ public class GameController : MonoBehaviour
 
         _dollAnim = new List<RagDollAnim>();
 
-        
-
         GenerationObj();
-
-        _car = FindObjectOfType<Car>();
 
         foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
         {
             _dollAnim.Add(dollItem);
         }
 
-        //car = new Car(GameObject obj);
-        //beginStart = gameObjectCar.GetComponent<Transform>().position;
+        CarInit();
 
-       // _car = new Car(2f, spawnPoint);
 
-        
 
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
@@ -97,31 +90,49 @@ public class GameController : MonoBehaviour
         }
 
 
-        if (_car != null)
+        if (_car.Count>0)
         {
-            if (_car.transform.position.x < -16f)
+            foreach (var itemCar in _car)
             {
-                _car.DestroyCar();
-                GenerationObj();
+                if (itemCar.transform.position.x < -16f)
+                {
+                    if (_car!=null)
+                    itemCar?.DestroyCar();
+                    _car.Remove(itemCar);
+                    break;
+                    //GenerationObj();
+                }
+                else
+                {
+                   Debug.Log("_car.Move()");
+                    itemCar?.Move();
+                }
             }
-            else
-            {
-                Debug.Log("_car.Move()");
-                _car.Move();
-            }
+            //_car.Clear();
+
+
         }
         else
         {
-           // GenerationObj();
+            GenerationObj();
+            CarInit();
         }
 
     }
 
+    void CarInit()
+    {
+        _car = new List<Car>();
+
+        foreach (var item in FindObjectsOfType<Car>())
+        {
+            _car.Add(item);
+        }
+    }
      
 
     void GenerationObj()
     {
-        _car = FindObjectOfType<Car>();
         Instantiate(gameObjectCar, spawnPoint.position, Quaternion.identity);
     }
 }
