@@ -69,6 +69,8 @@ public class Player : MonoBehaviour, IMove, IHeal
 
         UIDetector.instance.OnBloodyTopLeft += OnChangeVelocityLeft;
         UIDetector.instance.OnBloodyTopRight += OnChangeVelocityRight;
+        UIDetector.instance.OnBloodyTopUp += OnChangeVelocityUp;
+        UIDetector.instance.OnBloodyTopDown += OnChangeVelocityDown;
         UIDetector.instance.OnEndCorrectDirection += OnEndCorrectDirection;
 
     }
@@ -176,7 +178,7 @@ public class Player : MonoBehaviour, IMove, IHeal
 
         _transform.Rotate(VectorOS, CurrentOmega);
 
-        _line.gameObject.transform.position = new Vector3(_transform.position.x, _line.gameObject.transform.position.y, _transform.position.z);
+        _line.gameObject.transform.position = new Vector3(_transform.position.x, _line.gameObject.transform.position.y, _transform.position.z) ;
 
     }
 
@@ -263,13 +265,25 @@ public class Player : MonoBehaviour, IMove, IHeal
     {
         Vector3 Vpos = Quaternion.Euler(new Vector3(0f, Camera.main.transform.rotation.eulerAngles.y, 0f)) * (new Vector3(10f, 0f, 0f));
         ChangeVectorVelocity(Vpos);
-        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, 10f, 0f)) * _rigidbody.velocity;
+        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, 10f * Mathf.Sign(_rigidbody.velocity.x), 0f)) * _rigidbody.velocity;
     }
     private void OnChangeVelocityLeft()
     {
         Vector3 Vpos = Quaternion.Euler(new Vector3(0f, Camera.main.transform.rotation.eulerAngles.y, 0f)) * (new Vector3(-10f, 0f, 0f));
         ChangeVectorVelocity(Vpos);
-        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, -10f, 0f)) * _rigidbody.velocity;
+        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, -10f * Mathf.Sign(_rigidbody.velocity.x), 0f)) * _rigidbody.velocity;
+    }
+    private void OnChangeVelocityUp()
+    {
+        Vector3 Vpos = Quaternion.Euler(new Vector3(0f, Camera.main.transform.rotation.eulerAngles.y-90, 0f)) * (new Vector3(-10f, 0f, 0f));
+        ChangeVectorVelocity(Vpos);
+        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, 10f * Mathf.Sign(_rigidbody.velocity.z), 0f)) * _rigidbody.velocity;
+    }
+    private void OnChangeVelocityDown()
+    {
+        Vector3 Vpos = Quaternion.Euler(new Vector3(0f, Camera.main.transform.rotation.eulerAngles.y + 90, 0f)) * (new Vector3(-10f, 0f, 0f));
+        ChangeVectorVelocity(Vpos);
+        _rigidbody.velocity = Quaternion.Euler(new Vector3(0f, 10f * Mathf.Sign(_rigidbody.velocity.z), 0f)) * _rigidbody.velocity;
     }
     private void ChangeVectorVelocity(Vector3 ArrowDirection)
     {

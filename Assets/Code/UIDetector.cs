@@ -39,6 +39,14 @@ public class UIDetector : MonoBehaviour
     public delegate void BloodyTopLeft(); // Добавить новый делегат
     public event BloodyTopLeft OnBloodyTopLeft; // Создать на его основе событие
 
+    // event Волчок вверх
+    public delegate void BloodyTopUp(); // Добавить новый делегат
+    public event BloodyTopUp OnBloodyTopUp; // Создать на его основе событие
+
+    // event Волчок вниз
+    public delegate void BloodyTopDown(); // Добавить новый делегат
+    public event BloodyTopDown OnBloodyTopDown; // Создать на его основе событие
+
     // event закончили корректировать траекторию
     public delegate void EndCorrectDirection(); // Добавить новый делегат
     public event EndCorrectDirection OnEndCorrectDirection; // Создать на его основе событие
@@ -73,6 +81,12 @@ public class UIDetector : MonoBehaviour
                     break;
                 case typeSwipeDirection.Right:
                     OnBloodyTopRight?.Invoke();
+                    break;
+                case typeSwipeDirection.Up:
+                    OnBloodyTopUp?.Invoke();
+                    break;
+                case typeSwipeDirection.Down:
+                    OnBloodyTopDown?.Invoke();
                     break;
             }
     }
@@ -167,7 +181,8 @@ public class UIDetector : MonoBehaviour
             }
 
         }
-        return typeSwipeDirection.Unknown;
+
+            return typeSwipeDirection.Unknown;
     }
 
     float VerticalMoveValue ()
