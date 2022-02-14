@@ -14,6 +14,16 @@ public class RagDollAnim : MonoBehaviour
     private Rigidbody[] _rigidbodies;
     private Collider[] _colliders;
 
+    public RagDollAnim(Animator animator, Vector3 force, Rigidbody[] rigidbodies, Collider[] colliders)
+    {
+        _animator = animator;
+        _force = force;
+        _rigidbodies = rigidbodies;
+        _colliders = colliders;
+
+        
+    }
+
     void Start()
     {
         _rigidbodies = gameObject.GetComponentsInChildren<Rigidbody>();
