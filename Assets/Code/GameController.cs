@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour
 
             if (interactiveObject is DestructibleObjects dObject)
             {
-                if (dObject.GetComponent<Rigidbody>().velocity.y < -1)
+                if (dObject.GetComponent<Rigidbody>().velocity.y < -2)
                 {
                     //Debug.Log($"Падает объект {dObject.name} V {dObject.GetComponent<Rigidbody>().velocity.y}");
 
