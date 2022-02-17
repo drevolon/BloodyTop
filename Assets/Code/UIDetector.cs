@@ -51,6 +51,11 @@ public class UIDetector : MonoBehaviour
     public delegate void EndCorrectDirection(); // Добавить новый делегат
     public event EndCorrectDirection OnEndCorrectDirection; // Создать на его основе событие
 
+    // event single tap
+    public delegate void BloodyTopTap(); // Добавить новый делегат
+    public event BloodyTopTap OnBloodyTopTap; // Создать на его основе событие
+
+
     void Awake()
     {
         // Проверяем, задан ли инстанс нашего менеджера
@@ -93,15 +98,16 @@ public class UIDetector : MonoBehaviour
     protected void instanceUpPointer(Vector3 pos)
     {
         fingerUpPos = pos;
-        if (!isStart)
+        if (DetectSwipe() != typeSwipeDirection.Unknown)
         {
-            isStart = true;
             OnBloodyTopStart?.Invoke(fingerDownPos, fingerUpPos);
+            OnEndCorrectDirection?.Invoke();
         }
         else
         {
-            OnEndCorrectDirection?.Invoke();
+            OnBloodyTopTap?.Invoke();
         }
+        
         fingerDownPos = Vector2.zero;
     }
     private void CheckMouseDrag(bool isStart)
@@ -159,7 +165,9 @@ public class UIDetector : MonoBehaviour
                 {
                     instanceUpPointer(touch.position);
                 }
+
             }
+
         }
     }
 

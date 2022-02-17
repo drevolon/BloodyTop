@@ -104,7 +104,7 @@ public class GameController : MonoBehaviour
                 }
                 else
                 {
-                   Debug.Log("_car.Move()");
+                   //Debug.Log("_car.Move()");
                     itemCar?.Move();
                 }
             }
