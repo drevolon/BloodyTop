@@ -22,4 +22,7 @@ public class MainMenuView : MonoBehaviour
         _buttonStart.onClick.RemoveAllListeners();
         _buttonExit.onClick.RemoveAllListeners();
     }
+
+
+
 }
