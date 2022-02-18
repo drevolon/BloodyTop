@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.4964127, b: 0.57481724, a: 1}
+  m_IndirectSpecularColor: {r: 0.44402218, g: 0.49316543, b: 0.572232, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -37236,6 +37236,7 @@ MonoBehaviour:
   LineTarget: {fileID: 1995664741}
   StartVelocity: 40
   deltaVelocity: 2
+  angleCurvePath: 5
   deltaBoosterVelocity: 0.5
   SlowMotionRate: 0.2
   CurrentVelocity: 0
@@ -42724,12 +42725,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf3cb5c7f72b204b91bc28244552d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartOmega: 50
+  StartOmega: 5000
   LineTarget: {fileID: 1995664741}
-  StartVelocity: 40
-  deltaVelocity: 1
+  StartVelocity: 60
+  deltaVelocity: 2
+  angleCurvePath: 20
   deltaBoosterVelocity: 0.5
-  SlowMotionRate: 0.2
+  SlowMotionRate: 0.05
   CurrentVelocity: 0
   isStart: 0
 --- !u!136 &1480637094
