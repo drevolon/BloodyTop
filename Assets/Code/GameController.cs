@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : BaseController
 {
     [SerializeField]
     Transform spawnPoint;
@@ -18,7 +19,15 @@ public class GameController : MonoBehaviour
 
     Vector3 beginStart;
 
-
+    public GameController(Transform spawnPoint, GameObject gameObjectCar, InteractiveObject[] interactiveObjects, List<RagDollAnim> dollAnim, List<Car> car, Vector3 beginStart)
+    {
+        this.spawnPoint = spawnPoint;
+        this.gameObjectCar = gameObjectCar;
+        _interactiveObjects = interactiveObjects;
+        _dollAnim = dollAnim;
+        _car = car;
+        this.beginStart = beginStart;
+    }
 
     private void Awake()
     {
@@ -34,10 +43,10 @@ public class GameController : MonoBehaviour
 
         CarInit();
 
-
-
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
+
+   
 
     private void Update()
     {
