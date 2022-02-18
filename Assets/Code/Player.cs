@@ -179,7 +179,7 @@ public class Player : MonoBehaviour, IMove, IHeal
         //        VectorOS = _transform.rotation * VectorOS;
         //_transform.RotateAround(VectorOS, CurrentOmega * Time.deltaTime);
 
-        _transform.Rotate(VectorOS, CurrentOmega);
+        _transform.Rotate(VectorOS, CurrentOmega * Time.deltaTime);
 
         _line.gameObject.transform.position = new Vector3(_transform.position.x, _line.gameObject.transform.position.y, _transform.position.z);
 
