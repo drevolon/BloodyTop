@@ -12,6 +12,7 @@ public class Player : MonoBehaviour, IMove, IHeal
     public GameObject LineTarget; // Объект с LineRendere, который рисует траекторию движения
     public float StartVelocity = 50f; // Начальная скорость движения
     public float deltaVelocity = 0.05f; // скорость убывания движения
+    public float angleCurvePath = 5f;
     public float deltaBoosterVelocity = 0.5f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
     public float SlowMotionRate = 0.2f;
 
@@ -56,11 +57,11 @@ public class Player : MonoBehaviour, IMove, IHeal
 
         // LineRenderer у отдельного объекта
         _line = LineTarget.GetComponent<LineRenderer>();
-
+        float deltaTimeBetweenTargetPoint = 1f / StartVelocity;
         for (int nPoint = 0; nPoint < 20; nPoint++)
         {
             Vector3 pos = new Vector3(nPoint + 1f, 0f, 0f);
-            float angleChangeVelocity = StartOmega * Time.deltaTime * nPoint * Mathf.Deg2Rad;
+            float angleChangeVelocity = angleCurvePath * deltaTimeBetweenTargetPoint * nPoint * Mathf.Deg2Rad;
             float newPosx = pos.x * Mathf.Cos(-angleChangeVelocity) - pos.z * Mathf.Sin(-angleChangeVelocity);
             float newPosz = pos.x * Mathf.Sin(-angleChangeVelocity) + pos.z * Mathf.Cos(-angleChangeVelocity);
             TraceTarget[nPoint] = new Vector3(newPosx, pos.y, newPosz);
@@ -98,8 +99,8 @@ public class Player : MonoBehaviour, IMove, IHeal
 
             // Изменим частоту вращения
             //float angleChangeVelocity = CurrentOmega - StartOmega * CurrentVelocity / StartVelocity;
-            float angleChangeVelocity = CurrentOmega * Mathf.Deg2Rad * Time.deltaTime;
             CurrentOmega = StartOmega * CurrentVelocity / StartVelocity;
+            float angleChangeVelocity = angleCurvePath * Mathf.Deg2Rad * Time.deltaTime * CurrentOmega / StartOmega;
 
             float dx = _rigidbody.velocity.x * Mathf.Cos(angleChangeVelocity) + _rigidbody.velocity.z * Mathf.Sin(angleChangeVelocity);
             float dz = (-1) * _rigidbody.velocity.x * Mathf.Sin(angleChangeVelocity) + _rigidbody.velocity.z * Mathf.Cos(angleChangeVelocity);
