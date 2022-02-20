@@ -4,26 +4,28 @@ using UnityEngine;
 
 public class MainMenuController : BaseController
 {
-    public Transform PlaceForUi { get; }
-   
+    
+    private readonly ProfilePlayer _profilePlayer;
     private readonly MainMenuView _view;
 
     private readonly ResourcePath _viewPath = new ResourcePath { PathResource = "Prefabs/mainMenu" };
-    public MainMenuController(Transform placeForUi)
+    public MainMenuController(Transform placeForUi, ProfilePlayer profilePlayer)
     {
-        PlaceForUi = placeForUi;
+        _profilePlayer = profilePlayer;
         _view = LoadView(placeForUi);
-        _view.Init(StartGame, ExitGame);
+       // _view.Init(StartGame, ExitGame);
+        _view.Start += StartGame;
+        _view.Exit += ExitGame;
     }
 
     private void ExitGame()
     {
-        
+        Application.Quit();
     }
 
     private void StartGame()
     {
-        
+        _profilePlayer.CurrentState.Value = GameState.Game;
     }
 
     private MainMenuView LoadView(Transform placeForUi)

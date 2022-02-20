@@ -8,11 +8,10 @@ public class Car : InteractiveObject, IMove
     private Transform _transformSpawnPos;
     private Transform transformCar;
 
-    //public Car(float speed, Transform transformSpawnPos)
-    //{
-    //    Speed = speed;
-    //    _transformSpawnPos = transformSpawnPos;
-    //}
+    public Car(float speed)
+    {
+        Speed = speed;
+    }
 
     private void Awake()
     {
@@ -24,16 +23,6 @@ public class Car : InteractiveObject, IMove
         transformCar.Translate(new Vector3(-Speed*Time.deltaTime, 0f, 0f));
     }
 
-    void Start()
-    {
-        //transform = GetComponent<Transform>();
-    }
-
-    void Update()
-    {
-       // Debug.Log("Move Car");
-        //Move();
-    }
     public void DestroyCar()
     {
         Destroy(gameObject);

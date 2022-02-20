@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : BaseController
 {
@@ -19,18 +20,18 @@ public class GameController : BaseController
 
     Vector3 beginStart;
 
-    public GameController(Transform spawnPoint, GameObject gameObjectCar, InteractiveObject[] interactiveObjects, List<RagDollAnim> dollAnim, List<Car> car, Vector3 beginStart)
+    private Player _player;
+
+    public GameController(ProfilePlayer profilePlayer)
     {
-        this.spawnPoint = spawnPoint;
-        this.gameObjectCar = gameObjectCar;
-        _interactiveObjects = interactiveObjects;
-        _dollAnim = dollAnim;
-        _car = car;
-        this.beginStart = beginStart;
+        //var carController = new Car();
+        //AddController(carController);
     }
 
     private void Awake()
     {
+
+        _player = FindObjectOfType<Player>();
 
         _dollAnim = new List<RagDollAnim>();
 
@@ -50,7 +51,11 @@ public class GameController : BaseController
 
     private void Update()
     {
-       
+        if (_player.CurrentVelocity < 0)
+        {
+            //Debug.Log("Player Down. Need game over");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
 
         for (int i = 0; i < _interactiveObjects.Length; i++)
         {

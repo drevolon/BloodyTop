@@ -6,15 +6,18 @@ public class MainController : BaseController
 {
     private MainMenuController _mainMenuController;
     private GameController _gameController;
+    private SpawnController _spawnController;
+
+    private readonly ProfilePlayer profilePlayer;
+    
     private readonly Transform _placeForUi;
 
-    public MainController()
+    public MainController(Transform placeForUi, ProfilePlayer profilePlayer)
     {
-    }
-
-    public MainController(MainMenuController mainMenuController)
-    {
-        _mainMenuController = mainMenuController;
+        _placeForUi = placeForUi;
+        this.profilePlayer = profilePlayer;
+        OnChangeGameState(profilePlayer.CurrentState.Value);
+        profilePlayer.CurrentState.SubscribeOnChange(OnChangeGameState);
     }
 
     private void OnChangeGameState(GameState state)
@@ -22,18 +25,22 @@ public class MainController : BaseController
         switch (state)
         {
             case GameState.Start:
-                _mainMenuController = new MainMenuController(_placeForUi);
+                _mainMenuController = new MainMenuController(_placeForUi, profilePlayer);
                 _gameController?.Dispose();
+                _spawnController?.Dispose();
                 break;
+
             case GameState.Game:
-               // _gameController = new GameController(_placeForUi);
+                _spawnController = new SpawnController(profilePlayer);
                 _mainMenuController?.Dispose();
+                
                 break;
 
            
             default:
                 _mainMenuController?.Dispose();
                 _gameController?.Dispose();
+                _spawnController?.Dispose();
                 break;
         }
     }
@@ -42,7 +49,8 @@ public class MainController : BaseController
     {
         _mainMenuController?.Dispose();
         _gameController?.Dispose();
-        
+        _spawnController?.Dispose();
+        profilePlayer.CurrentState.UnSubscriptionOnChange(OnChangeGameState);
         base.OnDispose();
     }
 }
