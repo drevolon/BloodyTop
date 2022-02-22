@@ -67,9 +67,10 @@ public class Player : MonoBehaviour, IMove, IHeal
             TraceTarget[nPoint] = new Vector3(newPosx, pos.y, newPosz);
         }
 
-        UIDetector.instance.OnBloodyTopStart += OnStartBloodyTop;
+        UIDetector.instance.OnBloodyTopEndTap += OnStartBloodyTop;
+        UIDetector.instance.OnBloodyTopBeginTap += StartSlowMotion;
         UIDetector.instance.OnBloodyTopTargeting += OnUpdateTraceLine;
-        UIDetector.instance.OnBloodyTopTap += OnSingleTap;
+       //UIDetector.instance.OnBloodyTopTap += OnSingleTap;
 
         //UIDetector.instance.OnBloodyTopLeft += OnChangeVelocityLeft;
         //UIDetector.instance.OnBloodyTopRight += OnChangeVelocityRight;
@@ -206,6 +207,7 @@ public class Player : MonoBehaviour, IMove, IHeal
             _line.enabled = false;
             //                path.SetActive(false);
         }
+    
 
     }
 
@@ -306,14 +308,20 @@ public class Player : MonoBehaviour, IMove, IHeal
     {
         _line.enabled = false;
     }
+    private void StartSlowMotion()
+    {
+        if (isStart)
+        {
+            isStart = false;
+            Time.timeScale = SlowMotionRate;
+            Time.fixedDeltaTime = 0.02F * Time.timeScale;
+            StartCoroutine("WaitSlowMotion");
+        }
+    }
 
     private void OnSingleTap()
     {
-        Time.timeScale = SlowMotionRate;
-        Time.fixedDeltaTime = 0.02F * Time.timeScale;
-        isStart = false;
-        StartCoroutine("WaitSlowMotion");
-
+        StartSlowMotion();
     }
 
     IEnumerator WaitSlowMotion()

@@ -24,8 +24,13 @@ public class UIDetector : MonoBehaviour
     public static typeSwipeDirection SwipeDirection;
 
     // event старт волчка
-    public delegate void BloodyTopStart(Vector3 fingerUpPos, Vector3 fingerDownPos); // Добавить новый делегат
-    public event BloodyTopStart OnBloodyTopStart; // Создать на его основе событие
+    public delegate void BloodyTopEndTap(Vector3 fingerUpPos, Vector3 fingerDownPos); // Добавить новый делегат
+    public event BloodyTopEndTap OnBloodyTopEndTap; // Создать на его основе событие
+
+    // event старт волчка
+    public delegate void BloodyTopBeginTap(); // Добавить новый делегат
+    public event BloodyTopBeginTap OnBloodyTopBeginTap; // Создать на его основе событие
+
 
     // event Выбор направления старта
     public delegate void BloodyTopTargeting(Vector3 fingerUpPos, Vector3 fingerDownPos); // Добавить новый делегат
@@ -100,7 +105,7 @@ public class UIDetector : MonoBehaviour
         fingerUpPos = pos;
         if (DetectSwipe() != typeSwipeDirection.Unknown)
         {
-            OnBloodyTopStart?.Invoke(fingerDownPos, fingerUpPos);
+            OnBloodyTopEndTap?.Invoke(fingerDownPos, fingerUpPos);
             OnEndCorrectDirection?.Invoke();
         }
         else
@@ -119,6 +124,7 @@ public class UIDetector : MonoBehaviour
             {
                 fingerDownPos = Input.mousePosition;
                 fingerUpPos = Vector2.zero;
+                OnBloodyTopBeginTap?.Invoke();
             }
         }
 
@@ -149,6 +155,7 @@ public class UIDetector : MonoBehaviour
             {
                 fingerDownPos = touch.position;
                 fingerUpPos = Vector3.zero;
+                OnBloodyTopBeginTap?.Invoke();
             }
 
             if (touch.phase == TouchPhase.Moved)
