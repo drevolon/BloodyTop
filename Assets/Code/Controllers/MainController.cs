@@ -8,6 +8,9 @@ public class MainController : BaseController
     private GameController _gameController;
     private SpawnController _spawnController;
 
+    private PlayerController _playerController;
+
+
     private readonly ProfilePlayer profilePlayer;
     
     private readonly Transform _placeForUi;
@@ -33,6 +36,8 @@ public class MainController : BaseController
             case GameState.Game:
                 _spawnController = new SpawnController(profilePlayer);
                 _mainMenuController?.Dispose();
+
+                _playerController = new PlayerController(profilePlayer);
                 
                 break;
 

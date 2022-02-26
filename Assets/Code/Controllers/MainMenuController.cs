@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MainMenuController : BaseController
 {
@@ -9,22 +10,33 @@ public class MainMenuController : BaseController
     private readonly MainMenuView _view;
 
     private readonly ResourcePath _viewPath = new ResourcePath { PathResource = "Prefabs/mainMenu" };
+
+
     public MainMenuController(Transform placeForUi, ProfilePlayer profilePlayer)
     {
         _profilePlayer = profilePlayer;
         _view = LoadView(placeForUi);
+<<<<<<< HEAD
         _view.Init(StartGame, ExitGame);
         _view.Start += StartGame;
         _view.Exit += ExitGame;
+=======
+        
+        //_view.Start += StartGame;
+        //_view.Exit += ExitGame;
+
+        _view.Init(StartGame, ExitGame);
+>>>>>>> main
     }
 
-    private void ExitGame()
+    public void ExitGame()
     {
         Application.Quit();
     }
 
-    private void StartGame()
+    public void StartGame()
     {
+     
         _profilePlayer.CurrentState.Value = GameState.Game;
     }
 
