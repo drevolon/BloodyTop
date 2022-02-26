@@ -54,7 +54,7 @@ public class GameController : BaseController
         if (_player.CurrentVelocity < 0)
         {
             //Debug.Log("Player Down. Need game over");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+           //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         for (int i = 0; i < _interactiveObjects.Length; i++)
