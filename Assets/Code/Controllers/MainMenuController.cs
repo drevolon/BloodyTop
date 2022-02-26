@@ -16,17 +16,11 @@ public class MainMenuController : BaseController
     {
         _profilePlayer = profilePlayer;
         _view = LoadView(placeForUi);
-<<<<<<< HEAD
-        _view.Init(StartGame, ExitGame);
-        _view.Start += StartGame;
-        _view.Exit += ExitGame;
-=======
         
         //_view.Start += StartGame;
         //_view.Exit += ExitGame;
 
         _view.Init(StartGame, ExitGame);
->>>>>>> main
     }
 
     public void ExitGame()
