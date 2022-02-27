@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 public class UIEventController  
 {
+    public static UIEventController instance;
 
     private PointerPoint _point = new PointerPoint();
     // event старт волчка
@@ -33,7 +34,17 @@ public class UIEventController
     // event single tap
     public Action OnBloodyTopTap; // Создать на его основе событие
 
-    // Update is called once per frame
+
+
+
+    public UIEventController()
+    {
+        // Проверяем, задан ли инстанс нашего менеджера
+        if (instance == null)
+        { // Инстанс не задан
+            instance = this; // Установить в инстанс текущий объект
+        }
+    }
     public void SwipePointer(Vector3 pos)
     {
         _point.fingerUpPos = pos;

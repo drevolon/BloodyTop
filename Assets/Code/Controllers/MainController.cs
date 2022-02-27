@@ -9,7 +9,7 @@ public class MainController : BaseController
     private SpawnController _spawnController;
 
     private PlayerController _playerController;
-
+    private UIEventController _UIEventController;
 
     private readonly ProfilePlayer profilePlayer;
     
@@ -21,6 +21,7 @@ public class MainController : BaseController
         this.profilePlayer = profilePlayer;
         OnChangeGameState(profilePlayer.CurrentState.Value);
         profilePlayer.CurrentState.SubscribeOnChange(OnChangeGameState);
+        _UIEventController = new UIEventController();
     }
 
     private void OnChangeGameState(GameState state)
@@ -31,14 +32,18 @@ public class MainController : BaseController
                 _mainMenuController = new MainMenuController(_placeForUi, profilePlayer);
                 _gameController?.Dispose();
                 _spawnController?.Dispose();
+                _playerController?.Dispose();
+
                 break;
 
             case GameState.Game:
                 _spawnController = new SpawnController(profilePlayer);
-                _mainMenuController?.Dispose();
-
                 _playerController = new PlayerController(profilePlayer);
                 
+
+                _mainMenuController?.Dispose();
+
+
                 break;
 
            
@@ -46,6 +51,7 @@ public class MainController : BaseController
                 _mainMenuController?.Dispose();
                 _gameController?.Dispose();
                 _spawnController?.Dispose();
+                _playerController?.Dispose();
                 break;
         }
     }

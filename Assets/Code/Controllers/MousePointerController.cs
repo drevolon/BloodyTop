@@ -1,37 +1,35 @@
 ﻿using UnityEngine;
 
-public class MousePointerController : MonoBehaviour
+public class MousePointerController : BaseController, IPointerController
 {
-    public UIEventController UIEvent;
-    private PointerPoint _point = new PointerPoint();
+//    public UIEventController UIEvent { get; set; }
 
 
-    public MousePointerController(UIEventController EventClass)
-    {
-        UIEvent = EventClass;
-    }
+    //public MousePointerController(UIEventController EventClass)
+    //{
+    //    UIEvent = EventClass;
+    //}
     private void Update()
     {
-        CheckMouseDrag();
+        GetPointerUpdate();
     }
 
-
-    private void CheckMouseDrag()
+    private void GetPointerUpdate()
     {
 
         if (Input.GetMouseButtonDown(0))
         {
-            UIEvent.DownPointer(Input.mousePosition);
+            UIEventController.instance.DownPointer(Input.mousePosition);
         }
 
         if ((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0))
         {
-            UIEvent.SwipePointer(Input.mousePosition);
+            UIEventController.instance.SwipePointer(Input.mousePosition);
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            UIEvent.UpPointer(Input.mousePosition);
+            UIEventController.instance.UpPointer(Input.mousePosition);
         }
     }
 
