@@ -16,9 +16,7 @@ public class MainMenuController : BaseController
     {
         _profilePlayer = profilePlayer;
         _view = LoadView(placeForUi);
-        
-        //_view.Start += StartGame;
-        //_view.Exit += ExitGame;
+            
 
         _view.Init(StartGame, ExitGame);
     }
