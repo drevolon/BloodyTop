@@ -7,14 +7,14 @@ public class PlayerView : MonoBehaviour
 {
 
     public float StartOmega = 1500f; // Начальная скорость вращения
-    public float StartVelocity = 50f; // Начальная скорость движения
-    public float deltaVelocity = 0.05f; // скорость убывания движения
+    public float StartVelocity = 30f; // Начальная скорость движения
+    public float deltaVelocity = 1.5f; // скорость убывания движения
     public float angleCurvePath = 5f;
     public float deltaBoosterVelocity = 0.5f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
 
     public ProfilePlayer _profilePlayer;
 
-    public float CurrentOmega = 5f;// текущая скорость вращения
+    public float CurrentOmega;// текущая скорость вращения
     public float CurrentVelocity; // Текущая линейная скорость волчка
 
     protected float LimitOmega = 0.1f; // Обороты, при меньшем значении снимается ограничение на отклонение от оси Y
@@ -60,12 +60,12 @@ public class PlayerView : MonoBehaviour
     private void UpdatePositionTop()
     {
         // Уменьшаем скорость на deltaVelocity
-        CurrentVelocity -= deltaVelocity * Time.deltaTime;
         if (CurrentVelocity < 0)
         {
             //_rigidbody.velocity = Vector3.zero;
             return;
         }
+        CurrentVelocity -= deltaVelocity * Time.deltaTime;
 
         // нехрен летать, приземляем на площадку
         if (_transform.position.y > 0.2f)
