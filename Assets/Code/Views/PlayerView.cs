@@ -29,6 +29,12 @@ public class PlayerView : BaseController
 
     public void Init(SubscriptionProperty<PlayerState> playerState)
     {
+        StartVelocity = PlayerParams.StartVelocity;
+        deltaVelocity = PlayerParams.DeltaVelocity;
+        StartOmega = PlayerParams.StartOmega;
+
+
+
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
         _playerState = playerState;
