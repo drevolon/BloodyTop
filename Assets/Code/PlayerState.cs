@@ -6,5 +6,6 @@ public enum PlayerState
 {
     NotStart,
     Start,
-    SlowMotion
+    SlowMotion,
+    Stop
 }

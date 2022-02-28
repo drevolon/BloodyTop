@@ -26,12 +26,15 @@ public class GameController : BaseController
     {
         //var carController = new Car();
         //AddController(carController);
+
     }
 
     private void Awake()
     {
 
-       // _player = FindObjectOfType<Player>();
+        // _player = FindObjectOfType<Player>();
+        UIEventController.OnStoped += OnStopedTop; //Подписались на событие падения волчка;
+
 
         _dollAnim = new List<RagDollAnim>();
 
@@ -47,7 +50,11 @@ public class GameController : BaseController
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
 
-   
+    private void OnStopedTop() // Волчок упал
+    {
+        Debug.Log("Player Down. Need game over");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
     private void Update()
     {

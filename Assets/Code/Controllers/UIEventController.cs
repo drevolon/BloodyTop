@@ -2,50 +2,51 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UIEventController  
+public static class UIEventController  
 {
-    public static UIEventController instance;
-
-    private PointerPoint _point = new PointerPoint();
+    private static PointerPoint _point = new PointerPoint();
     // event старт волчка
-    public Action<PointerPoint> OnBloodyTopEndTap;
+    public static Action<PointerPoint> OnBloodyTopEndTap;
 
     // event старт волчка
-    public Action OnBloodyTopBeginTap;
+    public static Action OnBloodyTopBeginTap;
 
     // event Выбор направления старта
-    public Action<PointerPoint> OnBloodyTopTargeting;
+    public static Action<PointerPoint> OnBloodyTopTargeting;
 
     // event Волчок вправо
-    public Action OnBloodyTopRight; // Создать на его основе событие
+    public static Action OnBloodyTopRight; // Создать на его основе событие
 
     // event Волчок влево
-    public Action OnBloodyTopLeft; // Создать на его основе событие
+    public static Action OnBloodyTopLeft; // Создать на его основе событие
 
     // event Волчок вверх
-    public Action OnBloodyTopUp; // Создать на его основе событие
+    public static Action OnBloodyTopUp; // Создать на его основе событие
 
     // event Волчок вниз
-    public Action OnBloodyTopDown; // Создать на его основе событие
+    public static Action OnBloodyTopDown; // Создать на его основе событие
 
     // event закончили корректировать траекторию
-    public Action OnEndCorrectDirection; // Создать на его основе событие
+    public static Action OnEndCorrectDirection; // Создать на его основе событие
 
     // event single tap
-    public Action OnBloodyTopTap; // Создать на его основе событие
+    public static Action OnBloodyTopTap; // Создать на его основе событие
 
+    public static Action OnStart; // Запуск вочка
 
+    public static Action OnStoped; // Запуск вочка
 
-
-    public UIEventController()
+    public static void StartAction()
     {
-        // Проверяем, задан ли инстанс нашего менеджера
-        if (instance == null)
-        { // Инстанс не задан
-            instance = this; // Установить в инстанс текущий объект
-        }
+        OnStart?.Invoke();
     }
-    public void SwipePointer(Vector3 pos)
+
+    public static void StopedAction()
+    {
+        OnStoped?.Invoke();
+    }
+
+    public static void SwipePointer(Vector3 pos)
     {
         _point.fingerUpPos = pos;
         OnBloodyTopTargeting?.Invoke(_point);
@@ -66,7 +67,7 @@ public class UIEventController
                 break;
         }
     }
-    public void DownPointer(Vector3 pos)
+    public static void DownPointer(Vector3 pos)
     {
         if (_point.fingerDownPos == Vector2.zero)
         {
@@ -76,7 +77,7 @@ public class UIEventController
         }
     }
 
-    public void UpPointer(Vector3 pos)
+    public static void UpPointer(Vector3 pos)
     {
         _point.fingerUpPos = pos;
         if (DetectSwipe() != SwipeDirection.Unknown)
@@ -92,7 +93,7 @@ public class UIEventController
         _point.fingerDownPos = Vector2.zero;
     }
 
-    private SwipeDirection DetectSwipe()
+    private static SwipeDirection DetectSwipe()
     {
 
         if (VerticalMoveValue() > _point.SWIPE_THRESHOLD && VerticalMoveValue() > HorizontalMoveValue())
@@ -123,13 +124,13 @@ public class UIEventController
         return SwipeDirection.Unknown;
     }
 
-    private float VerticalMoveValue()
+    private static float VerticalMoveValue()
     {
         return Mathf.Abs(_point.fingerDownPos.y - _point.fingerUpPos.y);
     }
 
-    private float HorizontalMoveValue()
-    {
+    private static float HorizontalMoveValue()
+    { 
         return Mathf.Abs(_point.fingerDownPos.x - _point.fingerUpPos.x);
     }
 }

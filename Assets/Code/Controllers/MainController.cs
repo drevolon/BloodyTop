@@ -9,7 +9,6 @@ public class MainController : BaseController
     private SpawnController _spawnController;
 
     private PlayerController _playerController;
-    private UIEventController _UIEventController;
 
     private readonly ProfilePlayer profilePlayer;
     
@@ -21,7 +20,6 @@ public class MainController : BaseController
         this.profilePlayer = profilePlayer;
         OnChangeGameState(profilePlayer.CurrentState.Value);
         profilePlayer.CurrentState.SubscribeOnChange(OnChangeGameState);
-        _UIEventController = new UIEventController();
     }
 
     private void OnChangeGameState(GameState state)

@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerView : MonoBehaviour
+public class PlayerView : BaseController
 {
 
     public float StartOmega = 1500f; // Начальная скорость вращения
-    public float StartVelocity = 30f; // Начальная скорость движения
-    public float deltaVelocity = 1.5f; // скорость убывания движения
+    public float StartVelocity = 100f; // Начальная скорость движения
+    public float deltaVelocity = 2.5f; // скорость убывания движения
     public float angleCurvePath = 5f;
     public float deltaBoosterVelocity = 0.5f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
 
@@ -23,17 +23,20 @@ public class PlayerView : MonoBehaviour
     public bool isStart = false; // Флаг о произведенном запуске
     protected Rigidbody _rigidbody;
     protected Transform _transform;
+    private SubscriptionProperty<PlayerState> _playerState;
 
 
 
-    public void Init()
+    public void Init(SubscriptionProperty<PlayerState> playerState)
     {
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
+        _playerState = playerState;
+
+        _playerState.SubscribeOnChange(OnChangePlayerState);
 
         CurrentOmega = StartOmega;
         CurrentVelocity = StartVelocity;
-        _profilePlayer.CurrentPlayerState.SubscribeOnChange(OnChangePlayerState);
 
         UpdateManager.SubscribeToUpdate(ChangeVerticalAngle);
         UpdateManager.SubscribeToUpdate(UpdateRotate);
@@ -51,6 +54,11 @@ public class PlayerView : MonoBehaviour
                 break;
             case PlayerState.SlowMotion:
                 break;
+            case PlayerState.Stop:
+                UpdateManager.UnsubscribeFromUpdate(ChangeVerticalAngle);
+                UpdateManager.UnsubscribeFromUpdate(UpdateRotate);
+//                _playerState.UnSubscriptionOnChange(OnChangePlayerState);
+                break;
             default:
                 break;
         }
@@ -60,9 +68,12 @@ public class PlayerView : MonoBehaviour
     private void UpdatePositionTop()
     {
         // Уменьшаем скорость на deltaVelocity
-        if (CurrentVelocity < 0)
+        if (CurrentVelocity < 0) // Волчок остановился!!!!!!!
         {
-            //_rigidbody.velocity = Vector3.zero;
+            Debug.Log("КОНЕЦ");
+            UpdateManager.UnsubscribeFromUpdate(UpdatePositionTop);
+            _playerState.Value = PlayerState.Stop;
+            StartCoroutine(WaitDelayBeforeDrop(3f)); // Конец сцены
             return;
         }
         CurrentVelocity -= deltaVelocity * Time.deltaTime;
@@ -136,5 +147,16 @@ public class PlayerView : MonoBehaviour
             CurrentVelocity = CurrentVelocity * (1 - deltaBoosterVelocity);
             // Debug.Log("Decrease Speed");
         }
+    }
+    IEnumerator WaitDelayBeforeDrop(float timeDelay)
+    {
+        yield return new WaitForSeconds(timeDelay * Time.timeScale);
+        UIEventController.StopedAction();
+
+    }
+
+    protected override void OnDispose()
+    {
+
     }
 }

@@ -11,6 +11,8 @@ public class PlayerController : BaseController
     private MousePointerController _mouseController;
     private TouchController _touchController;
     private GameObject _playerObject;
+    private SubscriptionProperty<PlayerState> CurrentPlayerState;
+
     private GameObject LoadObject()
     {
         var objView = Object.Instantiate(ResourceLoader.LoadPrefab(_viewPath));
@@ -25,51 +27,29 @@ public class PlayerController : BaseController
     public PlayerController(ProfilePlayer profilePlayer)
     {
         _profilePlayer = profilePlayer;
+        CurrentPlayerState = new SubscriptionProperty<PlayerState>();
+
         _playerObject = LoadObject();
         _playerView = _playerObject.AddComponent<PlayerView>();
-        _playerView._profilePlayer = _profilePlayer;
-        _playerView.Init();
+        _playerView.Init(CurrentPlayerState);
 
         _playerUIView = _playerObject.AddComponent<PlayerUIView>();
-        _playerUIView._profilePlayer = _profilePlayer;
-        _playerUIView.LineTarget = Object.Instantiate(ResourceLoader.LoadPrefab(_viewPathobjLine));
         _playerUIView._view = _playerView;
-        _playerUIView.Init();
+        _playerUIView.LineTarget = Object.Instantiate(ResourceLoader.LoadPrefab(_viewPathobjLine));
+        _playerUIView.Init(CurrentPlayerState);
 
         // Загружаем контроллеры переферии (мышь, тач и т.д.)
         LoadUIController<MousePointerController>();
         LoadUIController<TouchController>();
 
-        //Подписываемся на изменение состояния волчка 
-        _profilePlayer.CurrentPlayerState.SubscribeOnChange(OnChangePlayerState);
         // Первоначальное состояние 
-        _profilePlayer.CurrentPlayerState.Value = PlayerState.NotStart;
+        CurrentPlayerState.Value = PlayerState.NotStart;
+
 
     }
-    private void OnChangePlayerState(PlayerState state)
-    {
-        switch (state)
-        {
-            case PlayerState.NotStart:
-                _playerUIView.notStartTop();
-                break;
 
-            case PlayerState.Start:
-                _playerUIView.StartTop();
-                break;
-
-            case PlayerState.SlowMotion:
-                _playerUIView.notStartTop();
-                break;
-
-
-            default:
-                break;
-        }
-    }
     protected override void OnDispose()
     {
-        _profilePlayer.CurrentPlayerState.UnSubscriptionOnChange(OnChangePlayerState);
         base.OnDispose();
     }
 }

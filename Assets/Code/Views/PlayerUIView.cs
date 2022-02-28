@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerUIView : MonoBehaviour
+public class PlayerUIView : BaseController
 {
-    [SerializeField]
-    float SlowMotionRate = 0.2f;
+    public float SlowMotionRate = 0.2f;
 
-    public ProfilePlayer _profilePlayer;
     protected Rigidbody _rigidbody;
     protected Transform _transform;
     public PlayerView _view;
@@ -20,15 +18,20 @@ public class PlayerUIView : MonoBehaviour
     public bool isStart = false; // Флаг о произведенном запуске
     protected Vector3[] TraceTarget = new Vector3[20]; // Массив, хранящий первоначальную траектрию
 
-    public void Init()
+    private SubscriptionProperty<PlayerState> _playerState;
+
+    public void Init(SubscriptionProperty<PlayerState> playerState)
     {
 
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
+        _playerState = playerState;
+
+        _playerState.SubscribeOnChange(OnChangePlayerState);
 
         // LineRenderer у отдельного объекта
-        
-        _line = UnityEngine.Object.Instantiate(LineTarget).GetComponent<LineRenderer>();
+
+        _line = LineTarget.GetComponent<LineRenderer>();
         _line.enabled = false;
 
         float deltaTimeBetweenTargetPoint = 1f / _view.StartVelocity;
@@ -40,7 +43,7 @@ public class PlayerUIView : MonoBehaviour
             float newPosz = pos.x * Mathf.Sin(-angleChangeVelocity) + pos.z * Mathf.Cos(-angleChangeVelocity);
             TraceTarget[nPoint] = new Vector3(newPosx, pos.y, newPosz);
         }
-       
+
     }
     private void UpdatePosLineTarget()
     {
@@ -59,14 +62,12 @@ public class PlayerUIView : MonoBehaviour
             vectorMove = vectorMove.normalized * _view.CurrentVelocity;
             _rigidbody.velocity = vectorMove;
         }
-        
+
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
         _line.enabled = false;
 
-        _profilePlayer.CurrentPlayerState.Value = PlayerState.Start;
-
-
+        _playerState.Value = PlayerState.Start;
     }
 
     public void OnUpdateTraceLine(PointerPoint _point)
@@ -99,28 +100,52 @@ public class PlayerUIView : MonoBehaviour
     {
         Time.timeScale = SlowMotionRate;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
-        StartCoroutine("WaitSlowMotion");
-        _profilePlayer.CurrentPlayerState.Value = PlayerState.SlowMotion;
+        StartCoroutine(WaitSlowMotion(3f));
+        _playerState.Value = PlayerState.SlowMotion;
     }
 
-    IEnumerator WaitSlowMotion()
+    IEnumerator WaitSlowMotion(float timeDelay)
     {
-        yield return new WaitForSeconds(3f * Time.timeScale);
+        yield return new WaitForSeconds(timeDelay * Time.timeScale);
         OnStartBloodyTop(new PointerPoint());
     }
-    public void notStartTop()
-    {
-        UIEventController.instance.OnBloodyTopTargeting += OnUpdateTraceLine;
-        UIEventController.instance.OnBloodyTopBeginTap -= StartSlowMotion;
-        UIEventController.instance.OnBloodyTopEndTap += OnStartBloodyTop;
-        UpdateManager.SubscribeToUpdate(UpdatePosLineTarget);
-    }
-    public void StartTop()
-    {
-        UIEventController.instance.OnBloodyTopTargeting -= OnUpdateTraceLine;
-        UIEventController.instance.OnBloodyTopBeginTap += StartSlowMotion;
-        UIEventController.instance.OnBloodyTopEndTap -= OnStartBloodyTop;
-        UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
 
+    private void OnChangePlayerState(PlayerState state)
+    {
+        switch (state)
+        {
+            case PlayerState.NotStart:
+                UIEventController.OnBloodyTopTargeting += OnUpdateTraceLine;
+                UIEventController.OnBloodyTopBeginTap -= StartSlowMotion;
+                UIEventController.OnBloodyTopEndTap += OnStartBloodyTop;
+                UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
+                break;
+
+            case PlayerState.Start:
+                UIEventController.OnBloodyTopTargeting -= OnUpdateTraceLine;
+                UIEventController.OnBloodyTopBeginTap += StartSlowMotion;
+                UIEventController.OnBloodyTopEndTap -= OnStartBloodyTop;
+                UpdateManager.SubscribeToUpdate(UpdatePosLineTarget);
+                break;
+
+            case PlayerState.SlowMotion:
+                UIEventController.OnBloodyTopTargeting += OnUpdateTraceLine;
+                UIEventController.OnBloodyTopBeginTap -= StartSlowMotion;
+                UIEventController.OnBloodyTopEndTap += OnStartBloodyTop;
+                UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
+                break;
+            case PlayerState.Stop:
+                UIEventController.OnBloodyTopBeginTap -= StartSlowMotion;
+                UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
+//                _playerState.UnSubscriptionOnChange(OnChangePlayerState);
+                break;
+            default:
+                break;
+        }
+    }
+    protected override void OnDispose()
+    {
+        _playerState.UnSubscriptionOnChange(OnChangePlayerState);
+        UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
     }
 }

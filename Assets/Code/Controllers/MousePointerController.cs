@@ -19,17 +19,17 @@ public class MousePointerController : BaseController, IPointerController
 
         if (Input.GetMouseButtonDown(0))
         {
-            UIEventController.instance.DownPointer(Input.mousePosition);
+            UIEventController.DownPointer(Input.mousePosition);
         }
 
         if ((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0))
         {
-            UIEventController.instance.SwipePointer(Input.mousePosition);
+            UIEventController.SwipePointer(Input.mousePosition);
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            UIEventController.instance.UpPointer(Input.mousePosition);
+            UIEventController.UpPointer(Input.mousePosition);
         }
     }
 

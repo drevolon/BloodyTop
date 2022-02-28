@@ -19,17 +19,17 @@ public class TouchController : BaseController, IPointerController
         {
             if (touch.phase == TouchPhase.Began)
             {
-                UIEventController.instance.DownPointer(touch.position);
+                UIEventController.DownPointer(touch.position);
             }
 
             if (touch.phase == TouchPhase.Moved)
             {
-                UIEventController.instance.SwipePointer(touch.position);
+                UIEventController.SwipePointer(touch.position);
             }
 
             if (touch.phase == TouchPhase.Ended)
             {
-                UIEventController.instance.UpPointer(touch.position);
+                UIEventController.UpPointer(touch.position);
             }
 
         }
