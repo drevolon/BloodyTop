@@ -27,6 +27,7 @@ public class PlayerController : BaseController
     public PlayerController(ProfilePlayer profilePlayer)
     {
         _profilePlayer = profilePlayer;
+
         CurrentPlayerState = new SubscriptionProperty<PlayerState>();
 
         _playerObject = LoadObject();

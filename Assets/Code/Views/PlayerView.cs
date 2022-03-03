@@ -12,17 +12,15 @@ public class PlayerView : BaseController
     public float angleCurvePath = 5f;
     public float deltaBoosterVelocity = 0.5f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
 
-    public ProfilePlayer _profilePlayer;
-
     public float CurrentOmega;// текущая скорость вращения
     public float CurrentVelocity; // Текущая линейная скорость волчка
 
     protected float LimitOmega = 0.1f; // Обороты, при меньшем значении снимается ограничение на отклонение от оси Y
     protected float maxAngleY = 5f; // Макс отклонение от вертикальной оси при вращении до достижении скорости вращения LimitOmega
 
-    public bool isStart = false; // Флаг о произведенном запуске
     protected Rigidbody _rigidbody;
     protected Transform _transform;
+
     private SubscriptionProperty<PlayerState> _playerState;
 
 

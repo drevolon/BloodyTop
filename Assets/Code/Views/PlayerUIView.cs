@@ -13,9 +13,10 @@ public class PlayerUIView : BaseController
 
     protected float LimitOmega = 0.1f; // Обороты, при меньшем значении снимается ограничение на отклонение от оси Y
     protected float maxAngleY = 5f; // Макс отклонение от вертикальной оси при вращении до достижении скорости вращения LimitOmega
+
     public GameObject LineTarget;
     private LineRenderer _line; // LineRenderer для прицеливания
-    public bool isStart = false; // Флаг о произведенном запуске
+
     protected Vector3[] TraceTarget = new Vector3[20]; // Массив, хранящий первоначальную траектрию
 
     private SubscriptionProperty<PlayerState> _playerState;
