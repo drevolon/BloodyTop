@@ -1,4 +1,3 @@
-﻿public interface SpawnView
+﻿internal class SpawnView
 {
-
 }

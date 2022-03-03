@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UpSpeed
   - DownSpeed
+  - InteractiveObject
   layers:
   - Default
   - TransparentFX

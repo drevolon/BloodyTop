@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using Random = UnityEngine.Random;
+
 public class GameController : BaseController
 {
     [SerializeField]
@@ -22,6 +24,10 @@ public class GameController : BaseController
 
     private Player _player;
 
+    Rigidbody rigidbodyInteractive;
+
+    bool _collisionTop=false;
+
     public GameController(ProfilePlayer profilePlayer)
     {
         //var carController = new Car();
@@ -34,6 +40,7 @@ public class GameController : BaseController
 
         // _player = FindObjectOfType<Player>();
         EventController.OnStoped += OnStopedTop; //Подписались на событие падения волчка;
+        EventController.OnCollision += OnCollisionTop; //Подписались на столкновение
 
 
         _dollAnim = new List<RagDollAnim>();
@@ -48,6 +55,18 @@ public class GameController : BaseController
         CarInit();
 
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
+    }
+
+    private void OnCollisionTop(Vector3 arg1, Collider collisionColliderObject)
+    {
+        Debug.Log($"волчок столкнулся {arg1} {collisionColliderObject}");
+        _collisionTop = true;
+        rigidbodyInteractive = collisionColliderObject.GetComponent<Rigidbody>();
+        if (rigidbodyInteractive != null)
+        {
+            rigidbodyInteractive.isKinematic = false;
+            rigidbodyInteractive.AddForce(transform.up * Random.Range(500, 1000));
+        }
     }
 
     private void OnStopedTop() // Волчок упал
@@ -73,12 +92,15 @@ public class GameController : BaseController
 
             if (interactiveObject is DestructibleObjects dObject)
             {
-                if (dObject.GetComponent<Rigidbody>().velocity.y < -2)
+                rigidbodyInteractive = dObject.GetComponent<Rigidbody>();
+
+                if (rigidbodyInteractive.velocity.y < -5f)
                 {
                     //Debug.Log($"Падает объект {dObject.name} V {dObject.GetComponent<Rigidbody>().velocity.y}");
 
-                    Destroy(dObject.gameObject, 2f);
+                    //Destroy(dObject.gameObject, 3f);
 
+                    //DestroyObject(dObject);
 
                     foreach (var dollItem in _dollAnim)
                     {
@@ -96,8 +118,13 @@ public class GameController : BaseController
                         }
                     }
                     _dollAnim.Clear();
-
                 }
+                //if (_collisionTop)
+                //{
+                //    rigidbodyInteractive.isKinematic = false;
+                //    rigidbodyInteractive.AddForce(transform.up * Random.Range(50, 100));
+                //    _collisionTop = false;
+                //}
             }
 
 
@@ -115,7 +142,7 @@ public class GameController : BaseController
         {
             foreach (var itemCar in _car)
             {
-                if (itemCar.transform.position.x < -16f)
+                if (itemCar.transform.position.x > 70f)
                 {
                     if (_car!=null)
                     itemCar?.DestroyCar();
@@ -135,7 +162,7 @@ public class GameController : BaseController
         }
         else
         {
-            GenerationObj();
+           // GenerationObj();
             CarInit();
         }
 
@@ -150,10 +177,15 @@ public class GameController : BaseController
             _car.Add(item);
         }
     }
-     
+
+    private void DestroyObject(GameObject dObject)
+    {
+        Destroy(dObject.gameObject, 3f);
+    }
+
 
     void GenerationObj()
     {
-        Instantiate(gameObjectCar, spawnPoint.position, Quaternion.identity);
+        Instantiate(gameObjectCar, spawnPoint.position, Quaternion.AngleAxis(-90, Vector3.up));
     }
 }
