@@ -33,7 +33,7 @@ public class GameController : BaseController
     {
 
         // _player = FindObjectOfType<Player>();
-        UIEventController.OnStoped += OnStopedTop; //Подписались на событие падения волчка;
+        EventController.OnStoped += OnStopedTop; //Подписались на событие падения волчка;
 
 
         _dollAnim = new List<RagDollAnim>();

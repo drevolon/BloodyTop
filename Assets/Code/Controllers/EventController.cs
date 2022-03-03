@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public static class UIEventController  
+public static class EventController  
 {
     private static PointerPoint _point = new PointerPoint();
     // event старт волчка
@@ -35,6 +35,9 @@ public static class UIEventController
     public static Action OnStart; // Запуск вочка
 
     public static Action OnStoped; // Запуск вочка
+
+    public static Action<Vector3,Collider> OnCollision; // При столкновении
+
 
     public static void StartAction()
     {
@@ -132,5 +135,10 @@ public static class UIEventController
     private static float HorizontalMoveValue()
     { 
         return Mathf.Abs(_point.fingerDownPos.x - _point.fingerUpPos.x);
+    }
+
+    public static void onCollision(Vector3 ForceVector, Collider other)
+    {
+        OnCollision?.Invoke(ForceVector,other);
     }
 }

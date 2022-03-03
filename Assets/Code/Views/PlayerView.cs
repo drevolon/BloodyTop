@@ -23,7 +23,8 @@ public class PlayerView : BaseController
 
     private SubscriptionProperty<PlayerState> _playerState;
 
-
+    private Vector3 MomemtumOnBeginHit;
+    private float TimeBeginHit;
 
     public void Init(SubscriptionProperty<PlayerState> playerState)
     {
@@ -144,18 +145,37 @@ public class PlayerView : BaseController
         if (other.gameObject.tag == "UpSpeed")
         {
             CurrentVelocity = CurrentVelocity * (1 + deltaBoosterVelocity);
+            return;
             //Debug.Log("Increase Speed");
         }
         if (other.gameObject.tag == "DownSpeed")
         {
             CurrentVelocity = CurrentVelocity * (1 - deltaBoosterVelocity);
+            return;
             // Debug.Log("Decrease Speed");
         }
+        Vector3 MomemtumOnEndHit = _rigidbody.velocity * _rigidbody.mass;
+        Vector3 DeltaMomemtumHit = MomemtumOnEndHit - MomemtumOnBeginHit;
+        float DeltaTimeHit = Time.time - TimeBeginHit;
+        if (DeltaTimeHit != 0)
+        {
+            Vector3 ForceVector = MomemtumOnBeginHit.normalized * DeltaMomemtumHit.magnitude / DeltaTimeHit;
+            EventController.onCollision(ForceVector,other);
+        }
+
+
     }
+
+    protected void OnTriggerEnter(Collider other)
+    {
+        MomemtumOnBeginHit = _rigidbody.velocity * _rigidbody.mass;
+        TimeBeginHit = Time.time;
+    }
+
     IEnumerator WaitDelayBeforeDrop(float timeDelay)
     {
         yield return new WaitForSeconds(timeDelay * Time.timeScale);
-        UIEventController.StopedAction();
+        EventController.StopedAction();
 
     }
 

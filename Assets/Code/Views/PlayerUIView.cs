@@ -116,27 +116,27 @@ public class PlayerUIView : BaseController
         switch (state)
         {
             case PlayerState.NotStart:
-                UIEventController.OnBloodyTopTargeting += OnUpdateTraceLine;
-                UIEventController.OnBloodyTopBeginTap -= StartSlowMotion;
-                UIEventController.OnBloodyTopEndTap += OnStartBloodyTop;
+                EventController.OnBloodyTopTargeting += OnUpdateTraceLine;
+                EventController.OnBloodyTopBeginTap -= StartSlowMotion;
+                EventController.OnBloodyTopEndTap += OnStartBloodyTop;
                 UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
                 break;
 
             case PlayerState.Start:
-                UIEventController.OnBloodyTopTargeting -= OnUpdateTraceLine;
-                UIEventController.OnBloodyTopBeginTap += StartSlowMotion;
-                UIEventController.OnBloodyTopEndTap -= OnStartBloodyTop;
+                EventController.OnBloodyTopTargeting -= OnUpdateTraceLine;
+                EventController.OnBloodyTopBeginTap += StartSlowMotion;
+                EventController.OnBloodyTopEndTap -= OnStartBloodyTop;
                 UpdateManager.SubscribeToUpdate(UpdatePosLineTarget);
                 break;
 
             case PlayerState.SlowMotion:
-                UIEventController.OnBloodyTopTargeting += OnUpdateTraceLine;
-                UIEventController.OnBloodyTopBeginTap -= StartSlowMotion;
-                UIEventController.OnBloodyTopEndTap += OnStartBloodyTop;
+                EventController.OnBloodyTopTargeting += OnUpdateTraceLine;
+                EventController.OnBloodyTopBeginTap -= StartSlowMotion;
+                EventController.OnBloodyTopEndTap += OnStartBloodyTop;
                 UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
                 break;
             case PlayerState.Stop:
-                UIEventController.OnBloodyTopBeginTap -= StartSlowMotion;
+                EventController.OnBloodyTopBeginTap -= StartSlowMotion;
                 UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
 //                _playerState.UnSubscriptionOnChange(OnChangePlayerState);
                 break;
