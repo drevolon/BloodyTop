@@ -25,8 +25,9 @@ public class GameController : BaseController
     private Player _player;
 
     Rigidbody rigidbodyInteractive;
+    Vector3 vectorForceInteractive;
 
-    bool _collisionTop=false;
+
 
     public GameController(ProfilePlayer profilePlayer)
     {
@@ -59,13 +60,18 @@ public class GameController : BaseController
 
     private void OnCollisionTop(Vector3 arg1, Collider collisionColliderObject)
     {
-        Debug.Log($"волчок столкнулся {arg1} {collisionColliderObject}");
-        _collisionTop = true;
+        
+        
         rigidbodyInteractive = collisionColliderObject.GetComponent<Rigidbody>();
         if (rigidbodyInteractive != null)
         {
             rigidbodyInteractive.isKinematic = false;
-            rigidbodyInteractive.AddForce(transform.up * Random.Range(500, 1000));
+
+            vectorForceInteractive = new Vector3(arg1.x, arg1.y*Random.Range(100f, 300f), arg1.z);
+
+           // Debug.Log($"волчок столкнулся x={arg1.x} y={arg1.y} z={arg1.z} {collisionColliderObject}");
+
+            rigidbodyInteractive.AddForce(vectorForceInteractive);
         }
     }
 
@@ -123,7 +129,7 @@ public class GameController : BaseController
                 //{
                 //    rigidbodyInteractive.isKinematic = false;
                 //    rigidbodyInteractive.AddForce(transform.up * Random.Range(50, 100));
-                //    _collisionTop = false;
+                
                 //}
             }
 
