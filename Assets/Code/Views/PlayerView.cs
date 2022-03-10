@@ -168,8 +168,11 @@ public class PlayerView : BaseController
 
     protected void OnTriggerEnter(Collider other)
     {
-        MomemtumOnBeginHit = _rigidbody.velocity * _rigidbody.mass;
-        TimeBeginHit = Time.time;
+        if (_rigidbody != null)
+        {
+            MomemtumOnBeginHit = _rigidbody.velocity * _rigidbody.mass;
+            TimeBeginHit = Time.time;
+        }
     }
 
     IEnumerator WaitDelayBeforeDrop(float timeDelay)
