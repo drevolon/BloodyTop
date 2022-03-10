@@ -60,19 +60,42 @@ public class GameController : BaseController
 
     private void OnCollisionTop(Vector3 arg1, Collider collisionColliderObject)
     {
+        var collisionColliderObjects = collisionColliderObject.GetComponentsInChildren<DestructibleObjects>();
+
         
-        
-        rigidbodyInteractive = collisionColliderObject.GetComponent<Rigidbody>();
-        if (rigidbodyInteractive != null)
+
+        if (collisionColliderObjects.Length > 0)
         {
-            rigidbodyInteractive.isKinematic = false;
+            collisionColliderObject.GetComponent<Collider>().isTrigger = true;
 
-            vectorForceInteractive = new Vector3(arg1.x, arg1.y*Random.Range(100f, 300f), arg1.z);
+            foreach (var item in collisionColliderObjects)
+            {
+                rigidbodyInteractive= item.GetComponent<Rigidbody>();
+                rigidbodyInteractive.isKinematic = false;
+                //vectorForceInteractive = new Vector3(arg1.x, arg1.y * Random.Range(1f, 3f), arg1.z);
 
-           // Debug.Log($"волчок столкнулся x={arg1.x} y={arg1.y} z={arg1.z} {collisionColliderObject}");
+                vectorForceInteractive = new Vector3( transform.position.x * Random.Range(30f, 50f), transform.position.y * Random.Range(300f, 500f), transform.position.z * Random.Range(30f, 50f));
 
-            rigidbodyInteractive.AddForce(vectorForceInteractive);
+                rigidbodyInteractive.AddForce(vectorForceInteractive);
+            }
         }
+        else
+        {
+
+
+            //rigidbodyInteractive = collisionColliderObject.GetComponent<Rigidbody>();
+
+
+            //if (rigidbodyInteractive != null)
+            //{
+            //    // Debug.Log($"волчок столкнулся x={arg1.x} y={arg1.y} z={arg1.z} {collisionColliderObject}");
+            //    rigidbodyInteractive.isKinematic = false;
+            //    vectorForceInteractive = new Vector3(arg1.x, arg1.y * Random.Range(100f, 300f), arg1.z);
+            //    rigidbodyInteractive.AddForce(vectorForceInteractive);
+            //}
+        }
+        //if (collisionColliderObject!=null)
+        //collisionColliderObject.GetComponent<Collider>().isTrigger = false;
     }
 
     private void OnStopedTop() // Волчок упал
@@ -186,6 +209,7 @@ public class GameController : BaseController
 
     private void DestroyObject(GameObject dObject)
     {
+        if (dObject!=null)
         Destroy(dObject.gameObject, 3f);
     }
 
