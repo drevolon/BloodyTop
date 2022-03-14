@@ -39,6 +39,9 @@ public class GameController : BaseController
     private void Awake()
     {
 
+        _car = new List<Car>();
+        
+
         // _player = FindObjectOfType<Player>();
         EventController.OnStoped += OnStopedTop; //Подписались на событие падения волчка;
         EventController.OnCollision += OnCollisionTop; //Подписались на столкновение
@@ -65,7 +68,7 @@ public class GameController : BaseController
         
 
         if (collisionColliderObjects.Length > 0)
-        {
+       {
             collisionColliderObject.GetComponent<Collider>().isTrigger = true;
 
             foreach (var item in collisionColliderObjects)
@@ -78,9 +81,10 @@ public class GameController : BaseController
 
                 rigidbodyInteractive.AddForce(vectorForceInteractive);
             }
+            
         }
-        else
-        {
+        //else
+        //{
 
 
             //rigidbodyInteractive = collisionColliderObject.GetComponent<Rigidbody>();
@@ -93,7 +97,7 @@ public class GameController : BaseController
             //    vectorForceInteractive = new Vector3(arg1.x, arg1.y * Random.Range(100f, 300f), arg1.z);
             //    rigidbodyInteractive.AddForce(vectorForceInteractive);
             //}
-        }
+       // }
         //if (collisionColliderObject!=null)
         //collisionColliderObject.GetComponent<Collider>().isTrigger = false;
     }
@@ -101,8 +105,16 @@ public class GameController : BaseController
     private void OnStopedTop() // Волчок упал
     {
         Debug.Log("Player Down. Need game over");
+
+        EventController.OnCollision -= OnCollisionTop;
+        EventController.OnStoped -= OnStopedTop;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+
     }
+
+   
 
     private void Update()
     {
@@ -171,7 +183,7 @@ public class GameController : BaseController
         {
             foreach (var itemCar in _car)
             {
-                if (itemCar.transform.position.x > 70f)
+                if (itemCar.transform.position.x < -60f)
                 {
                     if (_car!=null)
                     itemCar?.DestroyCar();
@@ -181,7 +193,7 @@ public class GameController : BaseController
                 }
                 else
                 {
-                   //Debug.Log("_car.Move()");
+                   Debug.Log("_car.Move()");
                     itemCar?.Move();
                 }
             }
@@ -199,11 +211,12 @@ public class GameController : BaseController
 
     void CarInit()
     {
-        _car = new List<Car>();
+       // _car = new List<Car>();
 
         foreach (var item in FindObjectsOfType<Car>())
         {
             _car.Add(item);
+            item.Speed = 10f;
         }
     }
 
@@ -214,8 +227,9 @@ public class GameController : BaseController
     }
 
 
-    void GenerationObj()
+    private GameObject GenerationObj()
     {
-        Instantiate(gameObjectCar, spawnPoint.position, Quaternion.AngleAxis(-90, Vector3.up));
+        return Instantiate(gameObjectCar, spawnPoint.position, Quaternion.AngleAxis(-90, Vector3.up));
+       // return Instantiate(gameObjectCar, spawnPoint.position, Quaternion.identity);
     }
 }
