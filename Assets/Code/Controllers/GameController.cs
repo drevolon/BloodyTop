@@ -179,28 +179,32 @@ public class GameController : BaseController
         }
 
 
-        if (_car.Count>0)
+        if (_car!=null && _car.Count>0 )
         {
-            foreach (var itemCar in _car)
+            try
             {
-                if (itemCar.transform.position.x < -60f)
+                foreach (var itemCar in _car)
                 {
-                    if (_car!=null)
-                    itemCar?.DestroyCar();
-                    _car.Remove(itemCar);
-                    break;
-                    //GenerationObj();
+                    if (itemCar.transform.position.x < -60f)
+                    {
+                        if (_car != null)
+                            itemCar?.DestroyCar();
+                        _car.Remove(itemCar);
+
+                        GenerationObj();
+                    }
+                    else
+                    {
+                        //Debug.Log("_car.Move()");
+                        itemCar?.Move();
+                    }
                 }
-                else
-                {
-                   Debug.Log("_car.Move()");
-                    itemCar?.Move();
-                }
+                _car.Clear();
             }
-            //_car.Clear();
+            catch { };
 
 
-        }
+            }
         else
         {
            // GenerationObj();
@@ -211,7 +215,8 @@ public class GameController : BaseController
 
     void CarInit()
     {
-       // _car = new List<Car>();
+        
+        _car = new List<Car>();
 
         foreach (var item in FindObjectsOfType<Car>())
         {
@@ -227,9 +232,9 @@ public class GameController : BaseController
     }
 
 
-    private GameObject GenerationObj()
+    private void GenerationObj()
     {
-        return Instantiate(gameObjectCar, spawnPoint.position, Quaternion.AngleAxis(-90, Vector3.up));
+        Instantiate(gameObjectCar, spawnPoint.position, Quaternion.AngleAxis(-90, Vector3.up));
        // return Instantiate(gameObjectCar, spawnPoint.position, Quaternion.identity);
     }
 }
