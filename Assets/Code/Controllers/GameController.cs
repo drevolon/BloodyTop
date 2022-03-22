@@ -45,46 +45,91 @@ public class GameController : BaseController
         // _player = FindObjectOfType<Player>();
         EventController.OnStoped += OnStopedTop; //Подписались на событие падения волчка;
         EventController.OnCollision += OnCollisionTop; //Подписались на столкновение
+        EventController.OnCollisionWall += OnCollisionWall; //Подписались на столкновение со стеной
 
 
         _dollAnim = new List<RagDollAnim>();
 
-        GenerationObj();
+       // GenerationObj();
 
         foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
         {
             _dollAnim.Add(dollItem);
+            dollItem.GetComponent<CapsuleCollider>().enabled = true;
         }
 
-        CarInit();
+        //CarInit();
 
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
 
-    private void OnCollisionTop(Vector3 arg1, Collider collisionColliderObject)
+    private void OnCollisionWall(Collider collider)
     {
-        var collisionColliderObjects = collisionColliderObject.GetComponentsInChildren<DestructibleObjects>();
+        //Debug.Log($"OnCollisionWall-{collider}");
 
         
 
+    }
+
+    private void OnCollisionTop(Vector3 arg1, Collider collisionColliderObject)
+    {
+        //Debug.Log($"OnCollisionTop-{collisionColliderObject} {collisionColliderObject.GetComponentInParent<RagDollAnim>()}");
+        //Debug.Log($"OnCollisionTop-{collisionColliderObject.gameObject.tag}");
+
+
+        if (collisionColliderObject.gameObject.tag == "RagDoll")
+        {
+            Debug.Log($"RagDoll-{collisionColliderObject} {collisionColliderObject.GetComponentInParent<RagDollAnim>()}");
+
+            RagDollAnim dollObject = collisionColliderObject.GetComponent<RagDollAnim>();
+            dollObject.Death();
+
+
+        }
+
+
+        var collisionColliderObjects = collisionColliderObject.GetComponentsInChildren<DestructibleObjects>();
+
+
         if (collisionColliderObjects.Length > 0)
-       {
-            collisionColliderObject.GetComponent<Collider>().isTrigger = true;
+        {
 
             foreach (var item in collisionColliderObjects)
             {
-                rigidbodyInteractive= item.GetComponent<Rigidbody>();
+                rigidbodyInteractive = item.GetComponent<Rigidbody>();
                 rigidbodyInteractive.isKinematic = false;
+                rigidbodyInteractive.useGravity = true;
+
                 //vectorForceInteractive = new Vector3(arg1.x, arg1.y * Random.Range(1f, 3f), arg1.z);
 
-                vectorForceInteractive = new Vector3( transform.position.x * Random.Range(30f, 50f), transform.position.y * Random.Range(300f, 500f), transform.position.z * Random.Range(30f, 50f));
+                //vectorForceInteractive = new Vector3(transform.position.x * Random.Range(30f, 50f), transform.position.y * Random.Range(300f, 500f), transform.position.z * Random.Range(30f, 50f));
 
-                rigidbodyInteractive.AddForce(vectorForceInteractive);
+                //rigidbodyInteractive.AddForce(vectorForceInteractive);
             }
-            
         }
-        //else
-        //{
+            //if (collisionColliderObject.CompareTag("RagDoll"))
+            //{
+            //    Debug.Log($"RagDoll-{collisionColliderObject}");
+            //    foreach (var dollItem in _dollAnim)
+            //    {
+            //        if (dollItem is RagDollAnim dollObject)
+            //        {
+            //            dollObject.Death();
+            //        }
+
+            //    }
+            //    foreach (var dollItem in _dollAnim)
+            //    {
+            //        if (dollItem is RagDollAnim dollObject)
+            //        {
+            //            dollObject.DestroyObject();
+            //        }
+            //    }
+            //    _dollAnim.Clear();
+            //}
+            //}
+            //else
+            //{
 
 
             //rigidbodyInteractive = collisionColliderObject.GetComponent<Rigidbody>();
@@ -97,9 +142,9 @@ public class GameController : BaseController
             //    vectorForceInteractive = new Vector3(arg1.x, arg1.y * Random.Range(100f, 300f), arg1.z);
             //    rigidbodyInteractive.AddForce(vectorForceInteractive);
             //}
-       // }
-        //if (collisionColliderObject!=null)
-        //collisionColliderObject.GetComponent<Collider>().isTrigger = false;
+            // }
+            //if (collisionColliderObject!=null)
+            //collisionColliderObject.GetComponent<Collider>().isTrigger = false;
     }
 
     private void OnStopedTop() // Волчок упал
@@ -108,6 +153,7 @@ public class GameController : BaseController
 
         EventController.OnCollision -= OnCollisionTop;
         EventController.OnStoped -= OnStopedTop;
+        EventController.OnCollisionWall -= OnCollisionWall;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
@@ -118,11 +164,11 @@ public class GameController : BaseController
 
     private void Update()
     {
-      //  if (_player.CurrentVelocity < 0)
-      //  {
-            //Debug.Log("Player Down. Need game over");
-           //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-      //  }
+        //  if (_player.CurrentVelocity < 0)
+        //  {
+        //Debug.Log("Player Down. Need game over");
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //  }
 
         for (int i = 0; i < _interactiveObjects.Length; i++)
         {
@@ -137,9 +183,15 @@ public class GameController : BaseController
 
                 if (rigidbodyInteractive.velocity.y < -5f)
                 {
+                    Destroy(dObject.gameObject, 3f);
+                }    
+
+
+                if (false)
+                {
                     //Debug.Log($"Падает объект {dObject.name} V {dObject.GetComponent<Rigidbody>().velocity.y}");
 
-                    //Destroy(dObject.gameObject, 3f);
+                    //
 
                     //DestroyObject(dObject);
 
@@ -185,7 +237,7 @@ public class GameController : BaseController
             {
                 foreach (var itemCar in _car)
                 {
-                    if (itemCar.transform.position.x < -60f)
+                    if (itemCar.transform.position.x < -80f)
                     {
                         if (_car != null)
                             itemCar?.DestroyCar();
@@ -208,7 +260,7 @@ public class GameController : BaseController
         else
         {
            // GenerationObj();
-            CarInit();
+           // CarInit();
         }
 
     }

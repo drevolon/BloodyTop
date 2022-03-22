@@ -6,7 +6,7 @@ using UnityEngine;
 public class TweenAnim : MonoBehaviour
 {
     [SerializeField]
-    private float _duration=3f;
+    private float _duration=1f;
     [SerializeField]
     private PathType _pathType = PathType.Linear;
     [SerializeField]
@@ -16,16 +16,34 @@ public class TweenAnim : MonoBehaviour
     private Vector3 _point=new Vector3(10f,0f, 0f);
 
 
-    private List<Vector3> _pointPosition = new List<Vector3>();
+    private List<Transform> _pointPosition = new List<Transform>();
 
 
     private void Start()
     {
-        foreach (var point in _points)
-            _pointPosition.Add(point.position);
-        transform.DOPath(_pointPosition.ToArray(), _duration, _pathType);
+        
+
+        
+
+          //  _pointPosition.Add(point.position);
+       // transform.DOPath(_pointPosition.ToArray(), _duration, _pathType);
 
         //transform.DOMove(_point, _duration);
+    }
+    private void Update()
+    {
+        Animation();
+    }
+
+    private void Animation()
+    {
+        var sequence = DOTween.Sequence();
+        foreach (var point in _points)
+        {
+            sequence.Append(transform.DOMove(point.transform.position, _duration));
+        }
+
+        sequence.Play();
     }
 
 }

@@ -38,7 +38,9 @@ public static class EventController
 
     public static Action<Vector3,Collider> OnCollision; // При столкновении
 
+    public static Action<Collider> OnCollisionWall; //При столкновении со стеной
 
+    
     public static void StartAction()
     {
         OnStart?.Invoke();
@@ -140,5 +142,10 @@ public static class EventController
     public static void onCollision(Vector3 ForceVector, Collider other)
     {
         OnCollision?.Invoke(ForceVector,other);
+    }
+
+    public static void onCollisionWall(Collider other)
+    {
+        OnCollisionWall?.Invoke(other);
     }
 }

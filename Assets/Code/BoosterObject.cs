@@ -18,7 +18,7 @@ public class BoosterObject : InteractiveObject
 
     public void Flay()
     {
-        float curXPosition = Mathf.PingPong(Time.time, _lengthFlay)+1;
+        float curXPosition = Mathf.PingPong(Time.time, _lengthFlay)+3f;
 
         transform.position = new Vector3(transform.position.x,
             curXPosition,

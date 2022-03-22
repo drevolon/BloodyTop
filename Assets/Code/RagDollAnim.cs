@@ -68,7 +68,7 @@ public class RagDollAnim : MonoBehaviour
 
         foreach (var collider in _colliders)
         {
-            collider.enabled = !isActive;
+            //collider.enabled = !isActive;
         }
     }
 

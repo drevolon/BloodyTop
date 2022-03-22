@@ -8,6 +8,9 @@ TagManager:
   - DownSpeed
   - InteractiveObject
   - Ground
+  - Wall
+  - RagDoll
+  - Building
   layers:
   - Default
   - TransparentFX
