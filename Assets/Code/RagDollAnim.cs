@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RagDollAnim : MonoBehaviour
 {
@@ -49,8 +50,9 @@ public class RagDollAnim : MonoBehaviour
         {
             _animator.enabled = false;
             SetState(false);
-            _rigidbodies.First().AddForce(_force, ForceMode.Impulse);
-            
+            // _rigidbodies.First().AddForce(_force, ForceMode.Force);
+
+            _rigidbodies.First().AddForce(transform.up*250000f);
         }
     }
 
@@ -60,15 +62,23 @@ public class RagDollAnim : MonoBehaviour
     }
 
     private void SetState(bool isActive)
-    {
+    {  
+        //GetComponent<Collider>().enabled = !isActive;
+
         foreach (var body in _rigidbodies)
         {
             body.isKinematic = isActive;
         }
 
-        foreach (var collider in _colliders)
+        if (!isActive)
         {
-            //collider.enabled = !isActive;
+            Debug.Log($"SetState {isActive}");
+            GetComponent<PatrolView>().enabled = false;
+            GetComponent<NavMeshAgent>().enabled = false;
+            foreach (var collider in _colliders)
+            {
+               //collider.enabled = false;
+            }
         }
     }
 

@@ -26,7 +26,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    importConstraints: 0
+    importConstraints: 1
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -260,32 +260,32 @@ ModelImporter:
       scale: {x: 1, y: 1, z: 1}
     - name: R_Shoulder
       parentName: Spine_2
-      position: {x: 0.08399807, y: -0.0011684641, z: 0.45169878}
+      position: {x: 0.039, y: 0.005, z: 0.361}
       rotation: {x: -0.48073697, y: 0.51854795, z: 0.5118103, w: 0.48790398}
       scale: {x: 1, y: 1, z: 1}
     - name: R_Elbow
       parentName: R_Shoulder
-      position: {x: -0.707, y: -0.334, z: 0}
+      position: {x: -0.659, y: -0.319, z: -0}
       rotation: {x: 0.000000059604638, y: -0.00000008940696, z: 0.00860989, w: 0.999963}
       scale: {x: 1, y: 1, z: 1}
     - name: R_Wrist
       parentName: R_Elbow
-      position: {x: -0.622, y: -0.424, z: -0}
+      position: {x: -0.551, y: -0.255, z: -0.275}
       rotation: {x: -0.64439845, y: -0.29111946, z: 0.3633982, w: 0.6065821}
       scale: {x: 1, y: 1, z: 1}
     - name: L_Shoulder
       parentName: Spine_2
-      position: {x: 0.08399807, y: -0.0011684641, z: -0.45169878}
+      position: {x: 0.024, y: 0.001, z: -0.362}
       rotation: {x: -0.48073697, y: 0.51854795, z: -0.51181024, w: -0.48790398}
       scale: {x: 1, y: 1, z: 1}
     - name: L_Elbow
       parentName: L_Shoulder
-      position: {x: -0.59, y: -0.313, z: -0}
+      position: {x: -0.827, y: -0.418, z: 0}
       rotation: {x: -0.00000004470348, y: 0.00000017881392, z: 0.00860989, w: 0.9999629}
       scale: {x: 1, y: 1, z: 1}
     - name: L_Wrist
       parentName: L_Elbow
-      position: {x: -0.691, y: -0.348, z: 0}
+      position: {x: -0.553, y: -0.359, z: -0.006}
       rotation: {x: -0.29111946, y: 0.64439845, z: -0.6065821, w: 0.3633982}
       scale: {x: 1, y: 1, z: 1}
     - name: L_Leg

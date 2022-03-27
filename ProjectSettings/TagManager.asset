@@ -11,6 +11,7 @@ TagManager:
   - Wall
   - RagDoll
   - Building
+  - Transport
   layers:
   - Default
   - TransparentFX

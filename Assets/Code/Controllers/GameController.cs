@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 using Random = UnityEngine.Random;
@@ -27,6 +28,12 @@ public class GameController : BaseController
     Rigidbody rigidbodyInteractive;
     Vector3 vectorForceInteractive;
 
+    private Rigidbody _rigidbody;
+    private RagDollAnim _ragDollAnim;
+
+
+    private float _velocityRigidBody = 500f;
+    private float _forceRigidBody=500f; 
 
 
     public GameController(ProfilePlayer profilePlayer)
@@ -52,11 +59,11 @@ public class GameController : BaseController
 
        // GenerationObj();
 
-        foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
-        {
-            _dollAnim.Add(dollItem);
-            dollItem.GetComponent<CapsuleCollider>().enabled = true;
-        }
+        //foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
+        //{
+        //    _dollAnim.Add(dollItem);
+        //    dollItem.GetComponent<CapsuleCollider>().enabled = true;
+        //}
 
         //CarInit();
 
@@ -76,17 +83,28 @@ public class GameController : BaseController
         //Debug.Log($"OnCollisionTop-{collisionColliderObject} {collisionColliderObject.GetComponentInParent<RagDollAnim>()}");
         //Debug.Log($"OnCollisionTop-{collisionColliderObject.gameObject.tag}");
 
+        if (collisionColliderObject.TryGetComponent<Rigidbody>(out _rigidbody)) _rigidbody = collisionColliderObject.GetComponent<Rigidbody>();
+
 
         if (collisionColliderObject.gameObject.tag == "RagDoll")
         {
-            Debug.Log($"RagDoll-{collisionColliderObject} {collisionColliderObject.GetComponentInParent<RagDollAnim>()}");
+            //Debug.Log($"RagDoll-{collisionColliderObject} {collisionColliderObject.GetComponentInParent<RagDollAnim>()}");
 
-            RagDollAnim dollObject = collisionColliderObject.GetComponent<RagDollAnim>();
-            dollObject.Death();
+            _ragDollAnim = collisionColliderObject.GetComponent<RagDollAnim>();
+            _ragDollAnim.Death();
+        }
+        if  (_rigidbody!=null && collisionColliderObject.gameObject.tag == "Transport")
+        {
+            Debug.Log($"Ломаем - {collisionColliderObject.gameObject.tag}");
+
+            collisionColliderObject.GetComponent<PatrolView>().enabled = false;
+            collisionColliderObject.GetComponent<NavMeshAgent>().enabled = false;
+
+           // _rigidbody.velocity=transform.up * 500f;
+            _rigidbody.AddForce(transform.up* 700f);
 
 
         }
-
 
         var collisionColliderObjects = collisionColliderObject.GetComponentsInChildren<DestructibleObjects>();
 
@@ -96,9 +114,9 @@ public class GameController : BaseController
 
             foreach (var item in collisionColliderObjects)
             {
-                rigidbodyInteractive = item.GetComponent<Rigidbody>();
-                rigidbodyInteractive.isKinematic = false;
-                rigidbodyInteractive.useGravity = true;
+                //rigidbodyInteractive = item.GetComponent<Rigidbody>();
+                //rigidbodyInteractive.isKinematic = false;
+               // rigidbodyInteractive.useGravity = true;
 
                 //vectorForceInteractive = new Vector3(arg1.x, arg1.y * Random.Range(1f, 3f), arg1.z);
 
