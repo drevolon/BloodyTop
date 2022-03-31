@@ -5,7 +5,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
+
 using Random = UnityEngine.Random;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameController : BaseController
 {
@@ -13,7 +16,9 @@ public class GameController : BaseController
     Transform spawnPoint;
     [SerializeField]
     GameObject gameObjectCar;
-    
+    [SerializeField]
+    GameObject gameObjectDamage;
+
     //RagDollAnim dollAnim;
 
     private InteractiveObject[] _interactiveObjects;
@@ -33,7 +38,20 @@ public class GameController : BaseController
 
 
     private float _velocityRigidBody = 500f;
-    private float _forceRigidBody=500f; 
+    private float _forceRigidBody=500f;
+
+    float movePopupWindows = 20f;
+
+    GameObject gameObjectPopup;
+
+    
+    public TextMeshProUGUI textMeshScore;
+    
+    public Slider sliderVelocity;
+
+    int score = 0;
+
+    int velocityTop = 0;
 
 
     public GameController(ProfilePlayer profilePlayer)
@@ -90,20 +108,32 @@ public class GameController : BaseController
         {
             //Debug.Log($"RagDoll-{collisionColliderObject} {collisionColliderObject.GetComponentInParent<RagDollAnim>()}");
 
+            DamagePopup.Create(collisionColliderObject.transform.position, 1000, gameObjectDamage);
+
             _ragDollAnim = collisionColliderObject.GetComponent<RagDollAnim>();
             _ragDollAnim.Death();
+
+            score += 1000;
         }
         if  (_rigidbody!=null && collisionColliderObject.gameObject.tag == "Transport")
         {
-            Debug.Log($"Ломаем - {collisionColliderObject.gameObject.tag}");
+            //Debug.Log($"Ломаем - {collisionColliderObject.gameObject.tag}");
+
+            DamagePopup.Create(collisionColliderObject.transform.position, 500, gameObjectDamage);
 
             collisionColliderObject.GetComponent<PatrolView>().enabled = false;
             collisionColliderObject.GetComponent<NavMeshAgent>().enabled = false;
 
-           // _rigidbody.velocity=transform.up * 500f;
             _rigidbody.AddForce(transform.up* 700f);
 
+            score += 500;
+        }
 
+        if (_rigidbody != null && collisionColliderObject.gameObject.tag == "InteractiveObject")
+        {
+            DamagePopup.Create(collisionColliderObject.transform.position, 100, gameObjectDamage);
+
+            score += 100;
         }
 
         var collisionColliderObjects = collisionColliderObject.GetComponentsInChildren<DestructibleObjects>();
@@ -125,49 +155,12 @@ public class GameController : BaseController
                 //rigidbodyInteractive.AddForce(vectorForceInteractive);
             }
         }
-            //if (collisionColliderObject.CompareTag("RagDoll"))
-            //{
-            //    Debug.Log($"RagDoll-{collisionColliderObject}");
-            //    foreach (var dollItem in _dollAnim)
-            //    {
-            //        if (dollItem is RagDollAnim dollObject)
-            //        {
-            //            dollObject.Death();
-            //        }
-
-            //    }
-            //    foreach (var dollItem in _dollAnim)
-            //    {
-            //        if (dollItem is RagDollAnim dollObject)
-            //        {
-            //            dollObject.DestroyObject();
-            //        }
-            //    }
-            //    _dollAnim.Clear();
-            //}
-            //}
-            //else
-            //{
-
-
-            //rigidbodyInteractive = collisionColliderObject.GetComponent<Rigidbody>();
-
-
-            //if (rigidbodyInteractive != null)
-            //{
-            //    // Debug.Log($"волчок столкнулся x={arg1.x} y={arg1.y} z={arg1.z} {collisionColliderObject}");
-            //    rigidbodyInteractive.isKinematic = false;
-            //    vectorForceInteractive = new Vector3(arg1.x, arg1.y * Random.Range(100f, 300f), arg1.z);
-            //    rigidbodyInteractive.AddForce(vectorForceInteractive);
-            //}
-            // }
-            //if (collisionColliderObject!=null)
-            //collisionColliderObject.GetComponent<Collider>().isTrigger = false;
+           
     }
 
     private void OnStopedTop() // Волчок упал
     {
-        Debug.Log("Player Down. Need game over");
+       // Debug.Log("Player Down. Need game over");
 
         EventController.OnCollision -= OnCollisionTop;
         EventController.OnStoped -= OnStopedTop;
@@ -182,12 +175,9 @@ public class GameController : BaseController
 
     private void Update()
     {
-        //  if (_player.CurrentVelocity < 0)
-        //  {
-        //Debug.Log("Player Down. Need game over");
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //  }
-
+        // Score.te
+        textMeshScore.text = score.ToString();
+        sliderVelocity.value = velocityTop;
         for (int i = 0; i < _interactiveObjects.Length; i++)
         {
             var interactiveObject = _interactiveObjects[i];
@@ -201,41 +191,17 @@ public class GameController : BaseController
 
                 if (rigidbodyInteractive.velocity.y < -5f)
                 {
+
+
+                    // gameObjectPopup = SpawnPopupDamage(interactiveObject.transform.position);
+                    // StartCoroutine(PopupDamageCoroutine(dObject.gameObject));
+                    //DamagePopup.Create(interactiveObject.transform.position, 200, gameObjectDamage);
+
                     Destroy(dObject.gameObject, 3f);
-                }    
 
 
-                if (false)
-                {
-                    //Debug.Log($"Падает объект {dObject.name} V {dObject.GetComponent<Rigidbody>().velocity.y}");
-
-                    //
-
-                    //DestroyObject(dObject);
-
-                    foreach (var dollItem in _dollAnim)
-                    {
-                        if (dollItem is RagDollAnim dollObject)
-                        {
-                            dollObject.Death();
-                        }
-
-                    }
-                    foreach (var dollItem in _dollAnim)
-                    {
-                        if (dollItem is RagDollAnim dollObject)
-                        {
-                            dollObject.DestroyObject();
-                        }
-                    }
-                    _dollAnim.Clear();
-                }
-                //if (_collisionTop)
-                //{
-                //    rigidbodyInteractive.isKinematic = false;
-                //    rigidbodyInteractive.AddForce(transform.up * Random.Range(50, 100));
-                
-                //}
+                }   
+               
             }
 
 
@@ -277,11 +243,11 @@ public class GameController : BaseController
             }
         else
         {
-           // GenerationObj();
-           // CarInit();
         }
 
     }
+
+
 
     void CarInit()
     {
@@ -306,5 +272,26 @@ public class GameController : BaseController
     {
         Instantiate(gameObjectCar, spawnPoint.position, Quaternion.AngleAxis(-90, Vector3.up));
        // return Instantiate(gameObjectCar, spawnPoint.position, Quaternion.identity);
+    }
+
+    private GameObject SpawnPopupDamage(Vector3 posSpawnDamage)
+    {
+        GameObject objDamageSpawn= Instantiate(gameObjectDamage, posSpawnDamage, Quaternion.identity);
+        return objDamageSpawn;
+        
+    }
+
+    IEnumerator PopupDamageCoroutine(GameObject gameObject)
+    {
+        while (gameObject!=null)
+        {
+            //SpawnPopupDamage(gameObject.transform.position);
+            //Debug.Log("IEnumerator begin");
+            gameObject.transform.position=new Vector3(0, gameObject.transform.position.y*10f * Time.deltaTime,0);
+            yield return new WaitForSeconds(10);
+            Destroy(gameObject);
+            Debug.Log("IEnumerator end");
+        }
+
     }
 }

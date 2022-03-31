@@ -25,3 +25,5 @@ public class BoosterObject : InteractiveObject
             transform.position.z);
     }
 }
+
+
