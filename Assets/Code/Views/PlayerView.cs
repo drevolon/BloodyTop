@@ -10,7 +10,8 @@ public class PlayerView : BaseController
     public float StartVelocity = 100f; // Начальная скорость движения
     public float deltaVelocity = 2.5f; // скорость убывания движения
     public float angleCurvePath = 5f;
-    public float deltaBoosterVelocity = 0.5f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
+    public float deltaBoosterVelocity = 0.2f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
+
 
     public float CurrentOmega;// текущая скорость вращения
     public float CurrentVelocity; // Текущая линейная скорость волчка
@@ -75,7 +76,7 @@ public class PlayerView : BaseController
         // Уменьшаем скорость на deltaVelocity
         if (CurrentVelocity < 0) // Волчок остановился!!!!!!!
         {
-            Debug.Log("КОНЕЦ");
+            //Debug.Log("КОНЕЦ");
             UpdateManager.UnsubscribeFromUpdate(UpdatePositionTop);
             _playerState.Value = PlayerState.Stop;
             StartCoroutine(WaitDelayBeforeDrop(3f)); // Конец сцены
@@ -98,7 +99,7 @@ public class PlayerView : BaseController
 
         Vector3 VelocityDirection = new Vector3(_rigidbody.velocity.x + dx, 0f, _rigidbody.velocity.z + dz).normalized * CurrentVelocity;
         _rigidbody.velocity = VelocityDirection;
-
+        EventController.onChangeVelocity(VelocityDirection);
     }
 
     private void ChangeVerticalAngle()

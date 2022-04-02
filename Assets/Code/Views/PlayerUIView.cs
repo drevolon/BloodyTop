@@ -2,13 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerUIView : BaseController
 {
+
+       
     public float SlowMotionRate = 0.2f;
 
     protected Rigidbody _rigidbody;
     protected Transform _transform;
+
     public PlayerView _view;
 
     protected float LimitOmega = 0.1f; // Обороты, при меньшем значении снимается ограничение на отклонение от оси Y
@@ -20,6 +24,7 @@ public class PlayerUIView : BaseController
     protected Vector3[] TraceTarget = new Vector3[20]; // Массив, хранящий первоначальную траектрию
 
     private SubscriptionProperty<PlayerState> _playerState;
+    private Slider _slider;
 
     public void Init(SubscriptionProperty<PlayerState> playerState)
     {
@@ -45,6 +50,9 @@ public class PlayerUIView : BaseController
             TraceTarget[nPoint] = new Vector3(newPosx, pos.y, newPosz);
         }
 
+        _slider = GameObject.Find("SliderVelocity").GetComponent<Slider>();
+        _slider.maxValue = PlayerParams.StartVelocity;
+        _slider.minValue = 0;
     }
     private void UpdatePosLineTarget()
     {
@@ -80,6 +88,7 @@ public class PlayerUIView : BaseController
             float dx = _point.fingerUpPos.x - _point.fingerDownPos.x;
             float dy = _point.fingerUpPos.y - _point.fingerDownPos.y;
             float anglePath = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg - 180f;
+            anglePath += Camera.main.transform.eulerAngles.y -90; // Крутим по углу камеры
 
             float dl = Mathf.Sqrt(dx * dx + dy * dy) / 10;
             int countPoints = Mathf.RoundToInt(dl);
@@ -126,6 +135,7 @@ public class PlayerUIView : BaseController
                 EventController.OnBloodyTopTargeting -= OnUpdateTraceLine;
                 EventController.OnBloodyTopBeginTap += StartSlowMotion;
                 EventController.OnBloodyTopEndTap -= OnStartBloodyTop;
+                EventController.OnChangeVelocity += ChangeViewVelocity;
                 UpdateManager.SubscribeToUpdate(UpdatePosLineTarget);
                 break;
 
@@ -138,11 +148,17 @@ public class PlayerUIView : BaseController
             case PlayerState.Stop:
                 EventController.OnBloodyTopBeginTap -= StartSlowMotion;
                 UpdateManager.UnsubscribeFromUpdate(UpdatePosLineTarget);
-//                _playerState.UnSubscriptionOnChange(OnChangePlayerState);
+                EventController.OnChangeVelocity -= ChangeViewVelocity;
+                //                _playerState.UnSubscriptionOnChange(OnChangePlayerState);
                 break;
             default:
                 break;
         }
+    }
+    public void ChangeViewVelocity(Vector3 Velocity)
+    {
+
+        _slider.value = Velocity.magnitude;
     }
     protected override void OnDispose()
     {

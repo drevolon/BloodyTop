@@ -37,6 +37,7 @@ public class MainController : BaseController
             case GameState.Game:
                 _spawnController = new SpawnController(profilePlayer);
                 _playerController = new PlayerController(profilePlayer);
+
                 
 
                 _mainMenuController?.Dispose();

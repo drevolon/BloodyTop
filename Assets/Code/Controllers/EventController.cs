@@ -40,6 +40,8 @@ public static class EventController
 
     public static Action<Collider> OnCollisionWall; //При столкновении со стеной
 
+    public static Action<Vector3> OnChangeVelocity; // Изменение скорости
+
     
     public static void StartAction()
     {
@@ -147,5 +149,9 @@ public static class EventController
     public static void onCollisionWall(Collider other)
     {
         OnCollisionWall?.Invoke(other);
+    }
+    public static void onChangeVelocity(Vector3 Velocity)
+    {
+        OnChangeVelocity?.Invoke(Velocity);
     }
 }

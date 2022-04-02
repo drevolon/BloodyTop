@@ -35,7 +35,7 @@ public class MainMenuView : MonoBehaviour
     {
         
         _buttonStart.onClick.AddListener(()=> { startGame?.Invoke(); });
-        _buttonExit.onClick.AddListener(()=> { exitGame.Invoke(); });
+        _buttonExit.onClick.AddListener(()=> { exitGame?.Invoke(); });
         //_buttonStart.onClick.AddListener(OnStartClick);
         //_buttonExit.onClick.AddListener(OnExitClick);
 
