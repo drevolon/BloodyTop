@@ -65,9 +65,17 @@ public class PlayerUIView : BaseController
     {
         if ((_point.fingerDownPos != Vector2.zero) && (_point.fingerUpPos != Vector2.zero))
         {
+            //float dx = _point.fingerUpPos.x - _point.fingerDownPos.x;
+            //float dy = _point.fingerUpPos.y - _point.fingerDownPos.y;
+            //Vector3 vectorMove = new Vector3(_transform.position.x - dy, 0, _transform.position.z + dx);
+            //vectorMove = Quaternion.Euler(0f, Camera.main.transform.rotation.y-90, 0f) * vectorMove; // Учет поворота камеры
+
             float dx = _point.fingerUpPos.x - _point.fingerDownPos.x;
             float dy = _point.fingerUpPos.y - _point.fingerDownPos.y;
-            Vector3 vectorMove = new Vector3(_transform.position.x - dy, 0, _transform.position.z + dx);
+            float anglePath = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg - 180f;
+            anglePath += Camera.main.transform.eulerAngles.y; // Крутим по углу камеры
+            Vector3 vectorMove = Quaternion.Euler(0f, anglePath, 0f) * Vector3.forward;
+
             vectorMove = vectorMove.normalized * _view.CurrentVelocity;
             _rigidbody.velocity = vectorMove;
         }

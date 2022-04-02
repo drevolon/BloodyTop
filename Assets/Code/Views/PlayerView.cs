@@ -9,7 +9,7 @@ public class PlayerView : BaseController
     public float StartOmega = 1500f; // Начальная скорость вращения
     public float StartVelocity = 100f; // Начальная скорость движения
     public float deltaVelocity = 2.5f; // скорость убывания движения
-    public float angleCurvePath = 5f;
+    public float angleCurvePath = 25f;
     public float deltaBoosterVelocity = 0.2f; // Изменение скорости (в долях единицы) от текущей, при столкновении с объектами-бустерами
 
 
@@ -162,8 +162,11 @@ public class PlayerView : BaseController
         {
             Vector3 ForceVector = MomemtumOnBeginHit.normalized * DeltaMomemtumHit.magnitude / DeltaTimeHit;
             EventController.onCollision(ForceVector,other);
-        }
 
+            Vector3 posTarget = other.gameObject.transform.position;
+
+        }
+        
 
     }
 
