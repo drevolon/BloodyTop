@@ -5,6 +5,7 @@ public class DamagePopup : InteractiveObject
 {
     private TextMeshPro textMeshPro;
     private static Quaternion rotationPopUp;
+    private Transform cam;
 
     public static DamagePopup Create(Vector3 pos, int damagePoints, GameObject gameObject)
     {
@@ -21,6 +22,7 @@ public class DamagePopup : InteractiveObject
     public void Setup(int damageAmount)
     {
         textMeshPro.SetText(damageAmount.ToString());
+        cam = Camera.main.transform;
     }
 
     private void Awake()
@@ -37,6 +39,7 @@ public class DamagePopup : InteractiveObject
     {
         float moveWindows = 20f;
         transform.position += new Vector3(0, moveWindows, 0)*Time.deltaTime;
+        transform.LookAt(transform.position+ cam.forward);
         Destroy(gameObject, 1f);
     }
 }
