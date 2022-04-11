@@ -44,9 +44,11 @@ public class GameController : BaseController
 
     GameObject gameObjectPopup;
 
-    
-    public TextMeshProUGUI textMeshScore;
-    
+    [SerializeField]
+    private TextMeshProUGUI textMeshScore;
+    [SerializeField]
+    private TextMeshProUGUI textMeshHighScore;
+
     public Slider sliderVelocity;
 
     int score = 0;
@@ -63,6 +65,9 @@ public class GameController : BaseController
 
     private void Awake()
     {
+        if (PlayerPrefs.HasKey("HighScore"))
+            textMeshHighScore.text = $"HiSc: { PlayerPrefs.GetString("HighScore")}";
+        else textMeshHighScore.text = $"HiSc: 0";
 
         _car = new List<Car>();
         
@@ -160,7 +165,11 @@ public class GameController : BaseController
 
     private void OnStopedTop() // Волчок упал
     {
-       // Debug.Log("Player Down. Need game over");
+        // Debug.Log("Player Down. Need game over");
+
+
+        PlayerPrefs.SetString("HighScore", textMeshScore.text);
+        PlayerPrefs.Save();
 
         EventController.OnCollision -= OnCollisionTop;
         EventController.OnStoped -= OnStopedTop;
