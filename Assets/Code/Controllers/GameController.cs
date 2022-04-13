@@ -48,10 +48,12 @@ public class GameController : BaseController
     private TextMeshProUGUI textMeshScore;
     [SerializeField]
     private TextMeshProUGUI textMeshHighScore;
+    [SerializeField]
+    private TextMeshProUGUI textMeshLastScore;
 
     public Slider sliderVelocity;
 
-    int score = 0;
+    int score = 0, lastScore=0, highScore=0;
 
     int velocityTop = 0;
 
@@ -66,8 +68,16 @@ public class GameController : BaseController
     private void Awake()
     {
         if (PlayerPrefs.HasKey("HighScore"))
+        {
             textMeshHighScore.text = $"HiSc: { PlayerPrefs.GetString("HighScore")}";
+        }
         else textMeshHighScore.text = $"HiSc: 0";
+
+        if (PlayerPrefs.HasKey("LastScore"))
+        {
+            textMeshLastScore.text = $"Sc: { PlayerPrefs.GetString("LastScore")}";
+        }
+        else textMeshLastScore.text = $"Sc: 0";
 
         _car = new List<Car>();
         
@@ -167,8 +177,19 @@ public class GameController : BaseController
     {
         // Debug.Log("Player Down. Need game over");
 
+        if (PlayerPrefs.HasKey("HighScore"))
+        {
+            highScore = Convert.ToInt16(PlayerPrefs.GetString("HighScore"));
+            lastScore = Convert.ToInt16(textMeshScore.text);
+            //Debug.Log($"{lastScore} > {highScore} ");
+            if (lastScore> highScore) PlayerPrefs.SetString("HighScore", textMeshScore.text);
+        }
+        else
+        {
+            PlayerPrefs.SetString("HighScore", textMeshScore.text);
+        }
 
-        PlayerPrefs.SetString("HighScore", textMeshScore.text);
+        PlayerPrefs.SetString("LastScore", textMeshScore.text);
         PlayerPrefs.Save();
 
         EventController.OnCollision -= OnCollisionTop;
