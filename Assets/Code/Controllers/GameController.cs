@@ -80,34 +80,20 @@ public class GameController : BaseController
         else textMeshLastScore.text = $"Sc: 0";
 
         _car = new List<Car>();
-        
 
-        // _player = FindObjectOfType<Player>();
+        sliderVelocity.value = 1;
+
         EventController.OnStoped += OnStopedTop; //Подписались на событие падения волчка;
         EventController.OnCollision += OnCollisionTop; //Подписались на столкновение
         EventController.OnCollisionWall += OnCollisionWall; //Подписались на столкновение со стеной
 
-
         _dollAnim = new List<RagDollAnim>();
-
-       // GenerationObj();
-
-        //foreach (var dollItem in FindObjectsOfType<RagDollAnim>())
-        //{
-        //    _dollAnim.Add(dollItem);
-        //    dollItem.GetComponent<CapsuleCollider>().enabled = true;
-        //}
-
-        //CarInit();
 
         _interactiveObjects = FindObjectsOfType<InteractiveObject>();
     }
 
     private void OnCollisionWall(Collider collider)
     {
-        //Debug.Log($"OnCollisionWall-{collider}");
-
-        
 
     }
 
@@ -129,6 +115,8 @@ public class GameController : BaseController
             _ragDollAnim.Death();
 
             score += 1000;
+
+            Destroy(collisionColliderObject.gameObject, 5f);
         }
         if  (_rigidbody!=null && collisionColliderObject.gameObject.tag == "Transport")
         {
@@ -197,11 +185,7 @@ public class GameController : BaseController
         EventController.OnCollisionWall -= OnCollisionWall;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-
     }
-
-   
 
     private void Update()
     {
@@ -221,15 +205,7 @@ public class GameController : BaseController
 
                 if (rigidbodyInteractive.velocity.y < -5f)
                 {
-
-
-                    // gameObjectPopup = SpawnPopupDamage(interactiveObject.transform.position);
-                    // StartCoroutine(PopupDamageCoroutine(dObject.gameObject));
-                    //DamagePopup.Create(interactiveObject.transform.position, 200, gameObjectDamage);
-
                     Destroy(dObject.gameObject, 3f);
-
-
                 }   
                
             }
@@ -239,8 +215,6 @@ public class GameController : BaseController
             {
                 bObject.Flay();
             }
-
-            
 
         }
 

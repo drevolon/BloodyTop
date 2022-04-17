@@ -9,7 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5107303288248027267, guid: 2668c4ddafd16204ea009f3f269de2e0, type: 3}
       propertyPath: m_Name
-      value: Car_interActive (2)
+      value: Car_interActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 5107303288248027267, guid: 2668c4ddafd16204ea009f3f269de2e0, type: 3}
+      propertyPath: m_TagString
+      value: Transport
       objectReference: {fileID: 0}
     - target: {fileID: 5596595460833088057, guid: 2668c4ddafd16204ea009f3f269de2e0, type: 3}
       propertyPath: m_RootOrder
@@ -29,7 +33,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5596595460833088057, guid: 2668c4ddafd16204ea009f3f269de2e0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -38.7
+      value: -32.5
       objectReference: {fileID: 0}
     - target: {fileID: 5596595460833088057, guid: 2668c4ddafd16204ea009f3f269de2e0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -37,7 +41,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5596595460833088057, guid: 2668c4ddafd16204ea009f3f269de2e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 85.3
+      value: 19.693659
       objectReference: {fileID: 0}
     - target: {fileID: 5596595460833088057, guid: 2668c4ddafd16204ea009f3f269de2e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -141,8 +145,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 7086475309408927428}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
+  m_Radius: 1.29
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -153,4 +157,16 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 48
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 1
+--- !u!114 &1900545346341694449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7086475309408927428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ee5d0a72b2f694386d5f769ff3cf4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

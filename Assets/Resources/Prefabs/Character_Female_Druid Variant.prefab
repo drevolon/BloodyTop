@@ -37,7 +37,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1832220664399794, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
       propertyPath: m_Name
-      value: Character_Female_Druid Variant
+      value: Character_Female_Druid Variant (1)
       objectReference: {fileID: 0}
     - target: {fileID: 1832220664399794, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
       propertyPath: m_TagString
@@ -69,7 +69,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4457554701572510, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.632001
+      value: 26.69
       objectReference: {fileID: 0}
     - target: {fileID: 4457554701572510, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
       propertyPath: m_LocalPosition.y
@@ -77,7 +77,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4457554701572510, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -22.209427
+      value: -9.06
       objectReference: {fileID: 0}
     - target: {fileID: 4457554701572510, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
       propertyPath: m_LocalRotation.w
@@ -207,6 +207,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1832220664399794, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
   m_PrefabInstance: {fileID: 8792779113550262385}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &405963290
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8791229202037290947}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.48
+  m_Height: 1.76
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.98, z: 0}
 --- !u!114 &2957127582144783851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,7 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 8886245723343472845}
-  _force: {x: 0, y: 10, z: 0}
+  _force: {x: 0, y: 5000, z: 0}
 --- !u!195 &4980479058713323001
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -260,20 +274,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!136 &405963290
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8791229202037290947}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.48
-  m_Height: 1.76
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.98, z: 0}
 --- !u!1 &8791245842542726091 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1967578377403322, guid: 180a5d9ad208141468642642ab23e0ad, type: 3}
